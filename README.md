@@ -1,7 +1,7 @@
 # IPMN-07
 
 ## In Progress:
-### 1. Description words / figures collection for classification and indicators
+### 1. Description words / figures collection
 ### 2. Data Preprocessing and set up our dataset
 ### 3. MVP-data-to-text Model Fine-tuning
 ### 4. API Implementation
