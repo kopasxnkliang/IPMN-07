@@ -20,19 +20,6 @@ class TextData:
     entityIdx: list
     relations: list
 
-    # def __init__(self, sentence="", id=None, entityIdx = [], relations = []):
-    #     self.sen = sentence
-    #     self.id = None
-    #     self.entityIdx = entityIdx
-    #     self.relations = relations
-    
-    # def print_data(self):
-    #     print(self.id)
-    #     print(self.entityIdx)
-    #     print(self.relations)
-
-
-
 
 def split_sentences(input_str: str) -> str:
     output_str = input_str.replace("?", ".")
@@ -68,9 +55,9 @@ def generate_relations(dataset: list):
                 res2 = model.infer({'text': text_data.sentence, 'h': {'pos': text_data.entityIdx[j][1]}, 't': {'pos': text_data.entityIdx[i][1]}})
                 # choose the one with larger confidence
                 if res1[1]>res2[1]:
-                    text_data.relations.append([text_data.entityIdx[i][0], res1, text_data.entityIdx[j][0]])
+                    text_data.relations.append([text_data.entityIdx[i][0], res1[0], text_data.entityIdx[j][0]])
                 else:
-                    text_data.relations.append([text_data.entityIdx[j][0], res2, text_data.entityIdx[i][0]])
+                    text_data.relations.append([text_data.entityIdx[j][0], res2[0], text_data.entityIdx[i][0]])
     
     return dataset
 
