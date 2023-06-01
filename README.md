@@ -2,7 +2,7 @@
 
 ## In Progress:
 ### 1. Description words / figures collection
-### 2. Data Preprocessing and set up our dataset
+### 2. Data Preprocessing and set up our dataset (using OpenNRE)
 ### 3. MVP-data-to-text Model Fine-tuning
 ### 4. API Implementation
 
