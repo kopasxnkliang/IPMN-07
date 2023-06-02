@@ -20,12 +20,25 @@ class TextData:
     entityIdx: list
     relations: list
 
+    # def __init__(self, sentence="", id=None, entityIdx = [], relations = []):
+    #     self.sen = sentence
+    #     self.id = None
+    #     self.entityIdx = entityIdx
+    #     self.relations = relations
+    
+    # def print_data(self):
+    #     print(self.id)
+    #     print(self.entityIdx)
+    #     print(self.relations)
+
+
+
 
 def split_sentences(input_str: str) -> str:
     output_str = input_str.replace("?", ".")
     output_str = output_str.replace("!", ".")
-    output_str = output_str.replace(";", ".")
-    output_str = output_str.replace(":", ".")
+    output_str = output_str.replace(";", ",")
+    output_str = output_str.replace(":", ",")
     output_str = [each+'.' for each in output_str.split('.')[:-1]]
     return output_str
 
