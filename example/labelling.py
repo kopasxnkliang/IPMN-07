@@ -33,7 +33,7 @@ def split_sentences(input_str: str) -> str:
     output_str = output_str.replace("--", ",")
     output_str = output_str.replace("-", ",")
     output_str = output_str.replace("%", " percent")
-    output_str = output_str.replace("&", " and")
+    output_str = output_str.replace("&", " and ")
     return output_str.split(". ")
 
 
