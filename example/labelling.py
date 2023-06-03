@@ -12,6 +12,26 @@ import opennre
 # relation extraction by NER result OpenNRE:https://github.com/thunlp/OpenNRE
 model = opennre.get_model('wiki80_bert_softmax')
 
+import xml.etree.ElementTree as ET
+
+
+
+def creaet_xml(filename, dataset, comment="STR"):
+
+    root = ET.Element('benchmark')
+    entries = ET.SubElement(root, 'entries')
+    for each in dataset:
+        if len(each.relations) == 0:
+            continue
+        entry = ET.SubElement(entries, 'entry', category="MISC", eid=str(each.idx), size=str(len(each.relations)))
+        modifiedtripleset = ET.SubElement(entry, 'entry')
+        for tripleset in each.relations:
+            mtriple = ET.SubElement(modifiedtripleset, 'mtriple')
+            mtriple.text = f"{tripleset[0]} | {tripleset[1]} | {tripleset[2]}"
+        lex = ET.SubElement(entries, 'entry', comment="STR", lid=str(each.idx), size='1')
+    tree = ET.ElementTree(root)
+    tree.write(filename)
+
 
 @dataclass
 class TextData:
@@ -33,7 +53,7 @@ def split_sentences(input_str: str) -> str:
     output_str = output_str.replace("--", ",")
     output_str = output_str.replace("-", ",")
     output_str = output_str.replace("%", " percent")
-    output_str = output_str.replace("&", " and ")
+    output_str = output_str.replace("&", " and")
     return output_str.split(". ")
 
 
@@ -69,6 +89,8 @@ def generate_relations(dataset: list):
     return dataset
 
 
+
+
 def main():
 
     example_str = "John, operates an illicit drug business and generates substantial cash proceeds. To conceal the illegal origins of the funds, John sets up a front business, a seemingly legitimate retail store. He commingles the drug profits with the store's revenue, creating a complex web of transactions, fake invoices, and inflated sales. By doing so, John disguises the illicit funds as legitimate business income, effectively laundering the money and making it difficult for law enforcement to trace its source."
@@ -77,6 +99,10 @@ def main():
     # print(dataset_without_relation[0].entityIdx)
     dataset_with_relation = generate_relations(dataset_without_relation)
     print(dataset_with_relation[-1].relations)
+
+    # Todo: label analysis and selectioin
+
+    # Todo: transform the dataset with labels into XML file
     
 
 
