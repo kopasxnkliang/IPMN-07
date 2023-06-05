@@ -14,7 +14,7 @@ import xml.etree.ElementTree as ET
 
 
 
-def creaet_xml(filename, dataset, comment="STR"):
+def create_xml(filename, dataset, comment="STR"):
     root = ET.Element('benchmark')
     entries = ET.SubElement(root, 'entries')
     print("Generating XML file ...")
