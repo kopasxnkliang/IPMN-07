@@ -8,7 +8,9 @@ from io import StringIO
 import pandas as pd
 from tqdm import tqdm
 
-from labelling import get_noun_phrases
+from datasets import load_dataset
+
+from labelling import get_noun_phrases, create_xml
 from labelling import generate_relations
 
 
@@ -84,22 +86,33 @@ def generate_financial_statement_raw_dataset():
 
     # print(raw_text_data['2015q4.json'][:3])
     # print(len(raw_text_data['2015q4.json']))
-    dataset_without_relation = get_noun_phrases(raw_text_data['2015q4.json'])
+    dataset_without_relation = get_noun_phrases(raw_text_data['2015q4.json'][:1000])
     dataset_with_relation = generate_relations(dataset_without_relation)
-    print(len(dataset_with_relation))
-    creaet_xml(os.path.join(txt_path, '2015q4.xml'), dataset_with_relation)
+    # print(len(dataset_with_relation))
+    create_xml(os.path.join(txt_path, '2015q4.xml'), dataset_with_relation)
 
     # with open(os.path.join(txt_path, '2015q4.txt'), "w") as f:
     #     f.write(str(dataset_with_relation))
     # print(dataset_with_relation)
+    return
 
+
+def generate_trade_event():
+    xml_path = "../../datasets/xmls"
+    dataset = load_dataset("nickmuchi/trade-the-event-finance")
+    print(dataset)
+    # dataset_with_relation = generate_relations(dataset_without_relation)
+    # create_xml(os.path.join(xml_path, 'trade_event.xml'), dataset_with_relation)
+    return
 
 
 def main():
-    # results of relation extraction are not as good as expected
+    # 1 financial phrase rank: results of relation extraction are not as good as expected
     # generate_financial_phrase_raw_dataset()
-
+    # 2 financial statement
     generate_financial_statement_raw_dataset()
+    # 3 trade the event finance:
+    # generate_trade_event()
 
 
 
