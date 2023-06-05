@@ -6,6 +6,7 @@ import csv
 import json
 from io import StringIO
 import pandas as pd
+from tqdm import tqdm
 
 from labelling import get_noun_phrases
 from labelling import generate_relations
@@ -75,15 +76,22 @@ def filtering_fs(text_list):
 def generate_financial_statement_raw_dataset():
     json_file_list = ['2015q4.json', '2016q2.json', '2017q1.json', '2016q3.json', '2016q1.json', '2015q3.json', '2017q2.json', '2016q4.json']
     dataset_path = "../../datasets/kaggle_json"
+    txt_path = "../../datasets/kaggle_txt"
     raw_text_data = {}
-    for json_file in json_file_list[:1]:
+    for json_file in tqdm(json_file_list[:1]):
         raw_text_data[json_file] = read_from_json(dataset_path, json_file)
         raw_text_data[json_file] = filtering_fs(raw_text_data[json_file])
+
     # print(raw_text_data['2015q4.json'][:3])
-    print(len(raw_text_data['2015q4.json']))
-    dataset_without_relation = get_noun_phrases(raw_text_data['2015q4.json'][:3])
+    # print(len(raw_text_data['2015q4.json']))
+    dataset_without_relation = get_noun_phrases(raw_text_data['2015q4.json'])
     dataset_with_relation = generate_relations(dataset_without_relation)
-    print(dataset_with_relation)
+    print(len(dataset_with_relation))
+    creaet_xml(os.path.join(txt_path, '2015q4.xml'), dataset_with_relation)
+
+    # with open(os.path.join(txt_path, '2015q4.txt'), "w") as f:
+    #     f.write(str(dataset_with_relation))
+    # print(dataset_with_relation)
 
 
 
