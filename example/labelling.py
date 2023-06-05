@@ -7,7 +7,7 @@ from textblob import TextBlob
 import nltk
 # nltk.download('brown')
 # nltk.download('punkt')
-
+from tqdm import tqdm
 import opennre
 
 import xml.etree.ElementTree as ET
@@ -17,7 +17,8 @@ import xml.etree.ElementTree as ET
 def creaet_xml(filename, dataset, comment="STR"):
     root = ET.Element('benchmark')
     entries = ET.SubElement(root, 'entries')
-    for each in dataset:
+    print("Generating XML file ...")
+    for each in tqdm(dataset):
         if len(each.relations) == 0:
             continue
         entry = ET.SubElement(entries, 'entry', category="MISC", eid=str(each.idx), size=str(len(each.relations)))
@@ -75,7 +76,8 @@ def split_sentences(input_str: str) -> str:
 
 def get_noun_phrases(cleaned_str: list):
     dataset = []
-    for idx, sen in enumerate(cleaned_str):
+    print("Extracting noun phrases ...")
+    for idx, sen in tqdm(enumerate(cleaned_str)):
         blob = TextBlob(sen)
         entityIdx = []
         t = sen.lower()
@@ -93,7 +95,8 @@ def generate_relations(dataset: list, threshold=0.75):
     # relation extraction by NER result OpenNRE:https://github.com/thunlp/OpenNRE
     model = opennre.get_model('wiki80_bert_softmax')
     new_dataset = []
-    for text_data in dataset:
+    print("Extracting relations ...")
+    for text_data in tqdm(dataset):
         empty_flag = True
         if len(text_data.entityIdx) == 0:
             continue
