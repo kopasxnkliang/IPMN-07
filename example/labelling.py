@@ -9,28 +9,44 @@ import nltk
 # nltk.download('punkt')
 
 import opennre
-# relation extraction by NER result OpenNRE:https://github.com/thunlp/OpenNRE
-model = opennre.get_model('wiki80_bert_softmax')
 
 import xml.etree.ElementTree as ET
 
 
 
 def creaet_xml(filename, dataset, comment="STR"):
-
     root = ET.Element('benchmark')
     entries = ET.SubElement(root, 'entries')
     for each in dataset:
         if len(each.relations) == 0:
             continue
         entry = ET.SubElement(entries, 'entry', category="MISC", eid=str(each.idx), size=str(len(each.relations)))
-        modifiedtripleset = ET.SubElement(entry, 'entry')
+        modifiedtripleset = ET.SubElement(entry, 'modifiedtripleset')
         for tripleset in each.relations:
             mtriple = ET.SubElement(modifiedtripleset, 'mtriple')
             mtriple.text = f"{tripleset[0]} | {tripleset[1]} | {tripleset[2]}"
-        lex = ET.SubElement(entries, 'entry', comment="STR", lid=str(each.idx), size='1')
+        lex = ET.SubElement(entry, 'lex', comment="STR", lid=str(each.idx), size='1')
+        lex.text = each.sentence
+    pretty_xml(root, '\t', '\n')
     tree = ET.ElementTree(root)
-    tree.write(filename)
+    tree.write(filename, encoding='utf-8', xml_declaration=True)
+
+    return
+
+
+def pretty_xml(element, indent, newline, level=0):
+    if element:
+        if (element.text is None) or element.text.isspace(): 
+            element.text = newline + indent * (level + 1)
+        else:
+            element.text = newline + indent * (level + 1) + element.text.strip() + newline + indent * (level + 1)
+    temp = list(element)
+    for subelement in temp:
+        if temp.index(subelement) < (len(temp) - 1):
+            subelement.tail = newline + indent * (level + 1)
+        else:
+            subelement.tail = newline + indent * level
+        pretty_xml(subelement, indent, newline, level=level + 1)
 
 
 @dataclass
@@ -73,18 +89,29 @@ def get_noun_phrases(cleaned_str: list):
     return dataset
 
 
-def generate_relations(dataset: list):
+def generate_relations(dataset: list, threshold=0.75):
+    # relation extraction by NER result OpenNRE:https://github.com/thunlp/OpenNRE
+    model = opennre.get_model('wiki80_bert_softmax')
     # data = dataset
     for text_data in dataset:
         for i in range(len(text_data.entityIdx)):
             for j in range(i+1,len(text_data.entityIdx)):
                 res1 = model.infer({'text': text_data.sentence, 'h': {'pos': text_data.entityIdx[i][1]}, 't': {'pos': text_data.entityIdx[j][1]}})
                 res2 = model.infer({'text': text_data.sentence, 'h': {'pos': text_data.entityIdx[j][1]}, 't': {'pos': text_data.entityIdx[i][1]}})
+                # check if the confidence is larger than threshold
+                if float(min(res1[1], res2[1])) <= threshold:
+                    continue
+                # check if the relation is already appended in the relation list
+                if [text_data.entityIdx[i][0], text_data.entityIdx[j][0]] in text_data.relations or [text_data.entityIdx[j][0], text_data.entityIdx[i][0]] in text_data.relations:
+                    continue
                 # choose the one with larger confidence
                 if res1[1]>res2[1]:
                     text_data.relations.append([text_data.entityIdx[i][0], res1[0], text_data.entityIdx[j][0]])
                 else:
                     text_data.relations.append([text_data.entityIdx[j][0], res2[0], text_data.entityIdx[i][0]])
+        
+        if len(text_data.relations) == 0:
+            del dataset[text_data]
     
     return dataset
 
@@ -103,6 +130,8 @@ def main():
     # Todo: label analysis and selectioin
 
     # Todo: transform the dataset with labels into XML file
+    creaet_xml("example.xml", dataset_with_relation)
+
     
 
 
