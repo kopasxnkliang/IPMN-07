@@ -92,8 +92,11 @@ def get_noun_phrases(cleaned_str: list):
 def generate_relations(dataset: list, threshold=0.75):
     # relation extraction by NER result OpenNRE:https://github.com/thunlp/OpenNRE
     model = opennre.get_model('wiki80_bert_softmax')
-    # data = dataset
+    new_dataset = []
     for text_data in dataset:
+        empty_flag = True
+        if len(text_data.entityIdx) == 0:
+            continue
         for i in range(len(text_data.entityIdx)):
             for j in range(i+1,len(text_data.entityIdx)):
                 res1 = model.infer({'text': text_data.sentence, 'h': {'pos': text_data.entityIdx[i][1]}, 't': {'pos': text_data.entityIdx[j][1]}})
@@ -101,21 +104,22 @@ def generate_relations(dataset: list, threshold=0.75):
                 # check if the confidence is larger than threshold
                 if float(min(res1[1], res2[1])) <= threshold:
                     continue
+                # check if A == B:
+                if text_data.entityIdx[i][0] == text_data.entityIdx[j][0]:
+                    continue
                 # check if the relation is already appended in the relation list
-                if [text_data.entityIdx[i][0], text_data.entityIdx[j][0]] in text_data.relations or [text_data.entityIdx[j][0], text_data.entityIdx[i][0]] in text_data.relations:
+                if [text_data.entityIdx[i][0], res1[0], text_data.entityIdx[j][0]] in text_data.relations or [text_data.entityIdx[j][0], res2[0], text_data.entityIdx[i][0]] in text_data.relations:
                     continue
                 # choose the one with larger confidence
-                if res1[1]>res2[1]:
+                if res1[1] > res2[1]:
                     text_data.relations.append([text_data.entityIdx[i][0], res1[0], text_data.entityIdx[j][0]])
                 else:
                     text_data.relations.append([text_data.entityIdx[j][0], res2[0], text_data.entityIdx[i][0]])
-        
-        if len(text_data.relations) == 0:
-            del dataset[text_data]
+                empty_flag = False
+        if not empty_flag:
+            new_dataset.append(text_data)
     
-    return dataset
-
-
+    return new_dataset
 
 
 def main():
