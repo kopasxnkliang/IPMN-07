@@ -137,7 +137,7 @@ def main():
     # Todo: label analysis and selectioin
 
     # Todo: transform the dataset with labels into XML file
-    creaet_xml("example.xml", dataset_with_relation)
+    create_xml("example.xml", dataset_with_relation)
 
     
 
