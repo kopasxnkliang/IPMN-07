@@ -3,7 +3,7 @@
 ## In Progress:
 ### 1. Description words / figures collection (90%)
 ### 2. Data Preprocessing (filtering) and set up our dataset (using OpenNRE) (10%)
-### 3. MVP-data-to-text Model Fine-tuning
+### 3. MVP-data-to-text Model Fine-tuning / GPT Fine-tuning
 ### 4. API Implementation
 
 ## System design details:
