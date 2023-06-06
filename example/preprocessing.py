@@ -14,12 +14,71 @@ from labelling import get_noun_phrases, create_xml
 from labelling import generate_relations
 
 
-important_words = ['laundering', 'launder', 'scam', 'scammer', 'fraud', 'transaction', 'illegal', 'illicit', \
-                    'criminal group', 'crime', 'crimes', 'criminal', 'terrorism', 'terrorist', 'financial', \ 
+important_words = ['laundering', 'launder', 'scam', 'scammer', 'fraud', 'transaction', 'illegal', 'illicit',
+                    'criminal group', 'crime', 'crimes', 'criminal', 'terrorism', 'terrorist', 'financial',
                     'trafficking', 'terrorist financing', 'sexual exploitation', 'migrant smuggling', 'smuggle' \
                     'human trafficking', 'terrorists', 'child', 'children', 'sex', 'arms', 'stealing', 'steal', \
-                    'stole', 'stealing', 'goods stolen', 'other goods', 'corruption', 'bribery']
+                    'stole', 'stealing', 'goods stolen', 'other goods', 'corruption', 'corrupt', 'bribery', \
+                    'corrupted', 'corrupts', 'bribe', 'briberies', 'frauds', 'email', 'emails', 'email scam', \
+                    'investment', 'invests', 'invest', 'invest scam', 'narcotic drugs', 'drug', 'drugs', \
+                    'psychotropic', 'psychotropic substances', 'romance scam', 'romance', 'deceive', 'deception', \
+                    'telephone', 'call', 'telecom', 'internet', 'currency', 'counterfeiting currency', 'environment', 
+                    'environmental', 'piracy', 'product', 'products', 'murder', 'grievous', 'injuries', 'injury', 'hurt', \
+                    'kidnapping', 'illegal restraint', 'restraint', 'hostage', 'hostage-taking', 'robbery', 'theft', \
+                    'tax', 'taxes', 'custom', 'customs', 'extortion', 'forgery', 'forgeries', 'insider', 'trade', \
+                    'trading', 'market', 'dollar', 'Manipulation', 'suspicious', 'suspected', 'report', 'amount', \
+                    'dollar', 'organized', 'racketeer', 'fund', 'movement', 'trail', 'audit', 'pattern', 'intended', \
+                    'break', 'indirect', 'direct', 'uneconomical', 'business', 'temporary', 'repository', 'finance', \
+                    'financial', 'pep', 'customer', 'risk', 'cash', 'region', 'jurisdiction', 'cause', 'counterparty', \
+                    'counterparties', 'companies', 'shell', 'fake', 'account', 'third party', 'party', 'personal', \
+                    'holder', 'offshore', 'resident', 'nonresident', 'indicators', 'background', 'incommensurate', \
+                    'unlicensed', 'service', 'operator', 'money', 'secure', 'security', 'coupon', 'securities', \
+                    'bank', 'banks', 'stock', 'political', 'politically exposed person', 'courier', 'evasive', 'reluctant', \
+                    'information', 'investigate', 'document', 'file', 'casino', 'charitable', 'organization', 'NPO', \
+                    'questioned', 'source', 'destination', 'phone', 'address', 'transfer', 'transact', 'transaction', \
+                    'entity', 'evasive', 'passive', 'background', 'human', 'person', 'period', 'balance', 'institution', \
+                    'date', 'role', 'related', 'connected', 'connection', 'relation', 'link', 'area','oversea', 'overseas', \
+                    'nature', 'incorporation', 'corporation', 'nation', 'law', 'disclosure', 'ordinance']
 
+important_words_matching = ['laundering', 'launder', 'scam', 'scammer', 'fraud', 'illegal', 'illicit',
+                    'criminal group', 'crime', 'crimes', 'criminal', 'terrorism', 'terrorist', 
+                    'trafficking', 'terrorist financing', 'sexual exploitation', 'migrant smuggling', 'smuggle' \
+                    'human trafficking', 'terrorists', 'child', 'sex', 'arms', 'stealing', 'steal', \
+                    'stole', 'stealing', 'goods stolen', 'corrupt', 'bribery', \
+                    'corrupted', 'corrupts', 'bribe', 'briberies', 'email scam', \
+                    'invest scam', 'narcotic drugs', 'drug', \
+                    'psychotropic', 'psychotropic substances', 'romance scam', 'romance', 'deceive', 'deception', \
+                    'telephone scam', 'phone scam', 'internet scam', 'counterfeiting currency', 'environmental crime', 
+                    'piracy', 'illegal product', 'murder', 'grievous', 'injuries', 'body injury', \
+                    'kidnapping', 'illegal restraint', 'restraint', 'hostage', 'hostage-taking', 'robbery', 'theft', \
+                    'excise taxes', 'excise duties', 'extortion', 'forgery', 'forgeries', \
+                    'manipulation', 'suspicious', 'suspected', \
+                    'organized crime', 'racketeer', 'illegal fund', 'movement', \
+                    'indirect tax', 'uneconomical', \
+                    'pep', 'risk investment', 'jurisdiction', 'counterparty', \
+                    'counterparties', 'shell company', 'shell companies', 'fake account', 'fake identity', 'third party',  \
+                    'offshore', 'nonresident', 'incommensurate', \
+                    'unlicensed', 'insecure', 'insecurity', \
+                    'political', 'politically exposed person', 'courier', 'evasive', 'reluctant', \
+                    'casino', 'charitable', 'npo', \
+                    'questioned','evasive', 'passive',  \
+                    'oversea company', \
+                    'law', 'disclosure', 'ordinance']
+
+def check_important_words_matching(sentence):
+    for word in important_words_matching:
+        if word in sentence:
+            return True
+    return False
+
+
+def check_important_words(sentence):
+
+    word_list = sentence.split(' ')
+    for word in important_words:
+        if word in word_list:
+            return True
+    return False
 
 def simple_filtering(input_str):
     output_str = input_str.replace("?", ".")
@@ -87,21 +146,35 @@ def generate_financial_statement_raw_dataset():
     json_file_list = ['2015q4.json', '2016q2.json', '2017q1.json', '2016q3.json', '2016q1.json', '2015q3.json', '2017q2.json', '2016q4.json']
     dataset_path = "../../datasets/kaggle_json"
     txt_path = "../../datasets/kaggle_txt"
+    xml_path = "../../datasets/xmls"
     raw_text_data = {}
-    for json_file in tqdm(json_file_list[:1]):
+    for json_file in tqdm(json_file_list):
         raw_text_data[json_file] = read_from_json(dataset_path, json_file)
         raw_text_data[json_file] = filtering_fs(raw_text_data[json_file])
+        text_data = []
+        print(len(raw_text_data[json_file]))
+        for text in tqdm(raw_text_data[json_file]):
+            text = simple_filtering(text)
+            sen_list = text.split(".")
+            for sen in sen_list:
+                if len(sen.split(' ')) <= 10:
+                    continue
+                if "/" in sen or ",," in sen or "…" in sen or "[]" in sen:
+                    continue 
+                if check_important_words_matching(sen):
+                    text_data.append(sen)
+        print(len(text_data))
 
-    # print(raw_text_data['2015q4.json'][:3])
-    # print(len(raw_text_data['2015q4.json']))
-    dataset_without_relation = get_noun_phrases(raw_text_data['2015q4.json'][:1000])
-    dataset_with_relation = generate_relations(dataset_without_relation)
-    # print(len(dataset_with_relation))
-    create_xml(os.path.join(txt_path, '2015q4.xml'), dataset_with_relation)
+        txt_filename = json_file.split('.')[0] + '.txt'
+        with open(os.path.join(xml_path, txt_filename), "w") as f:
+            f.write(str(text_data))  
 
-    # with open(os.path.join(txt_path, '2015q4.txt'), "w") as f:
-    #     f.write(str(dataset_with_relation))
-    # print(dataset_with_relation)
+        # dataset_without_relation = get_noun_phrases(raw_text_data[json_file])
+        # dataset_with_relation = generate_relations(dataset_without_relation)
+        
+        xml_filename = json_file.split('.')[0] + '.xml'
+        # create_xml(os.path.join(xml_path, xml_filename), dataset_with_relation)
+
     return
 
 
@@ -120,16 +193,17 @@ def generate_news_finance_dataset():
     text_list = dataset['train']['description']
     text_data = []
     print(len(text_list))
-    for text in text_list:
+    for text in tqdm(text_list):
         text = simple_filtering(text)
         sen_list = text.split(".")
         for sen in sen_list:
-            if len(sen.split(' ')) <= 8 or len(sen.split(' ')) > 35:
+            if len(sen.split(' ')) <= 10:
                 continue
             if "/" in sen or ",," in sen or "…" in sen or "[]" in sen:
                 continue 
-            text_data.append(sen)
-    print(text_data)
+            if check_important_words_matching(sen):
+                text_data.append(sen)
+    print(len(text_data))
     with open(os.path.join(xml_path, 'news_finance.txt'), "w") as f:
         f.write(str(text_data))
     dataset_without_relation = get_noun_phrases(text_data)
@@ -142,12 +216,12 @@ def main():
     # 1 financial phrase rank: results of relation extraction are not as good as expected
     # generate_financial_phrase_raw_dataset()
     # 2 financial statement
-    # generate_financial_statement_raw_dataset()
+    generate_financial_statement_raw_dataset()
     # 3 trade the event finance: 
     # generate_trade_event_dataset()
     
     # 4 news finance
-    generate_news_finance_dataset()
+    # generate_news_finance_dataset()
 
     # dataset5 = load_dataset("JanosAudran/financial-reports-sec", "large_lite")
 
