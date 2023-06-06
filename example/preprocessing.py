@@ -14,6 +14,13 @@ from labelling import get_noun_phrases, create_xml
 from labelling import generate_relations
 
 
+important_words = ['laundering', 'launder', 'scam', 'scammer', 'fraud', 'transaction', 'illegal', 'illicit', \
+                    'criminal group', 'crime', 'crimes', 'criminal', 'terrorism', 'terrorist', 'financial', \ 
+                    'trafficking', 'terrorist financing', 'sexual exploitation', 'migrant smuggling', 'smuggle' \
+                    'human trafficking', 'terrorists', 'child', 'children', 'sex', 'arms', 'stealing', 'steal', \
+                    'stole', 'stealing', 'goods stolen', 'other goods', 'corruption', 'bribery']
+
+
 def simple_filtering(input_str):
     output_str = input_str.replace("?", ".")
     output_str = output_str.strip("`")
@@ -25,9 +32,10 @@ def simple_filtering(input_str):
     output_str = output_str.replace(":", ",")
     output_str = output_str.replace("--", ",")
     output_str = output_str.replace("-", ",")
-    output_str = output_str.replace("%", "percent")
+    output_str = output_str.replace("—", ",")
+    output_str = output_str.replace("%", " percent")
     output_str = output_str.replace("&", " and ")
-    return output_str
+    return output_str.lower()
 
 
 def read_csv(filename):
@@ -97,7 +105,7 @@ def generate_financial_statement_raw_dataset():
     return
 
 
-def generate_trade_event():
+def generate_trade_event_dataset():
     xml_path = "../../datasets/xmls"
     dataset = load_dataset("nickmuchi/trade-the-event-finance")
     print(dataset)
@@ -106,14 +114,44 @@ def generate_trade_event():
     return
 
 
+def generate_news_finance_dataset():
+    xml_path = "../../datasets/xmls"
+    dataset = load_dataset("PaulAdversarial/all_news_finance_sm_1h2023")
+    text_list = dataset['train']['description']
+    text_data = []
+    print(len(text_list))
+    for text in text_list:
+        text = simple_filtering(text)
+        sen_list = text.split(".")
+        for sen in sen_list:
+            if len(sen.split(' ')) <= 8 or len(sen.split(' ')) > 35:
+                continue
+            if "/" in sen or ",," in sen or "…" in sen or "[]" in sen:
+                continue 
+            text_data.append(sen)
+    print(text_data)
+    with open(os.path.join(xml_path, 'news_finance.txt'), "w") as f:
+        f.write(str(text_data))
+    dataset_without_relation = get_noun_phrases(text_data)
+    dataset_with_relation = generate_relations(dataset_without_relation)
+    # print(len(dataset_with_relation))
+    create_xml(os.path.join(xml_path, 'news_finance.xml'), dataset_with_relation)
+
+
 def main():
     # 1 financial phrase rank: results of relation extraction are not as good as expected
     # generate_financial_phrase_raw_dataset()
     # 2 financial statement
-    generate_financial_statement_raw_dataset()
-    # 3 trade the event finance:
-    # generate_trade_event()
+    # generate_financial_statement_raw_dataset()
+    # 3 trade the event finance: 
+    # generate_trade_event_dataset()
+    
+    # 4 news finance
+    generate_news_finance_dataset()
 
+    # dataset5 = load_dataset("JanosAudran/financial-reports-sec", "large_lite")
+
+    # dataset4 = load_dataset("nlpaueb/finer-139", split="train")
 
 
 if __name__ == '__main__':
