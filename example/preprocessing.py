@@ -14,6 +14,10 @@ from labelling import get_noun_phrases, create_xml
 from labelling import generate_relations
 
 
+dataset_path = "../../datasets/kaggle_json"
+txt_path = "../../datasets/kaggle_txt"
+xml_path = "../../datasets/xmls"
+
 important_words = ['laundering', 'launder', 'scam', 'scammer', 'fraud', 'transaction', 'illegal', 'illicit',
                     'criminal group', 'crime', 'crimes', 'criminal', 'terrorism', 'terrorist', 'financial',
                     'trafficking', 'terrorist financing', 'sexual exploitation', 'migrant smuggling', 'smuggle' \
@@ -49,21 +53,23 @@ important_words_matching = ['laundering', 'launder', 'scam', 'scammer', 'fraud',
                     'invest scam', 'narcotic drugs', 'drug', \
                     'psychotropic', 'psychotropic substances', 'romance scam', 'romance', 'deceive', 'deception', \
                     'telephone scam', 'phone scam', 'internet scam', 'counterfeiting currency', 'environmental crime', 
-                    'piracy', 'illegal product', 'murder', 'grievous', 'injuries', 'body injury', \
+                    'piracy', 'illegal product', 'murder', 'grievous bodily injury', 'injuries', 'body injury', \
                     'kidnapping', 'illegal restraint', 'restraint', 'hostage', 'hostage-taking', 'robbery', 'theft', \
                     'excise taxes', 'excise duties', 'extortion', 'forgery', 'forgeries', \
                     'manipulation', 'suspicious', 'suspected', \
                     'organized crime', 'racketeer', 'illegal fund', 'movement', \
                     'indirect tax', 'uneconomical', \
                     'pep', 'risk investment', 'jurisdiction', 'counterparty', \
-                    'counterparties', 'shell company', 'shell companies', 'fake account', 'fake identity', 'third party',  \
-                    'offshore', 'nonresident', 'incommensurate', \
+                    'counterparties', 'shell company', 'shell companies', 'fake account', 'fake identity', 'controlled by third party',  \
+                    'offshore', 'nonresident', 'incommensurate', 'operated by third party',\
                     'unlicensed', 'insecure', 'insecurity', \
                     'political', 'politically exposed person', 'courier', 'evasive', 'reluctant', \
                     'casino', 'charitable', 'npo', \
                     'questioned','evasive', 'passive',  \
                     'oversea company', \
-                    'law', 'disclosure', 'ordinance']
+                    'violate law', 'violate ordinance']
+
+
 
 def check_important_words_matching(sentence):
     for word in important_words_matching:
@@ -144,36 +150,47 @@ def filtering_fs(text_list):
 
 def generate_financial_statement_raw_dataset():
     json_file_list = ['2015q4.json', '2016q2.json', '2017q1.json', '2016q3.json', '2016q1.json', '2015q3.json', '2017q2.json', '2016q4.json']
-    dataset_path = "../../datasets/kaggle_json"
-    txt_path = "../../datasets/kaggle_txt"
-    xml_path = "../../datasets/xmls"
     raw_text_data = {}
+    total_text_data = []
     for json_file in tqdm(json_file_list):
         raw_text_data[json_file] = read_from_json(dataset_path, json_file)
         raw_text_data[json_file] = filtering_fs(raw_text_data[json_file])
         text_data = []
-        print(len(raw_text_data[json_file]))
         for text in tqdm(raw_text_data[json_file]):
             text = simple_filtering(text)
             sen_list = text.split(".")
             for sen in sen_list:
                 if len(sen.split(' ')) <= 10:
                     continue
-                if "/" in sen or ",," in sen or "…" in sen or "[]" in sen:
+                if "/" in sen or ",," in sen or "…" in sen or "[]" in sen or '\n' in sen or '\t' in sen:
                     continue 
                 if check_important_words_matching(sen):
                     text_data.append(sen)
-        print(len(text_data))
+        total_text_data.extend(text_data)
 
-        txt_filename = json_file.split('.')[0] + '.txt'
-        with open(os.path.join(xml_path, txt_filename), "w") as f:
-            f.write(str(text_data))  
+        # generate XML files separately
+        # txt_filename = json_file.split('.')[0] + '.txt'
+        # with open(os.path.join(xml_path, txt_filename), "w") as f:
+        #     f.write(str(text_data))  
 
         # dataset_without_relation = get_noun_phrases(raw_text_data[json_file])
         # dataset_with_relation = generate_relations(dataset_without_relation)
         
-        xml_filename = json_file.split('.')[0] + '.xml'
+        # xml_filename = json_file.split('.')[0] + '.xml'
         # create_xml(os.path.join(xml_path, xml_filename), dataset_with_relation)
+
+    # remove duplicates
+    total_text_data = list(dict.fromkeys(total_text_data))
+    txt_filename = 'financial_statements.txt'
+    print(f"Writing {len(total_text_data)} pieces of text data to {os.path.join(xml_path, txt_filename)} ... ")
+    with open(os.path.join(xml_path, txt_filename), "w") as f:
+        f.write(str(total_text_data))  
+    
+    dataset_without_relation = get_noun_phrases(total_text_data)
+    dataset_with_relation = generate_relations(dataset_without_relation)
+
+    xml_filename = 'financial_statements.xml'
+    create_xml(os.path.join(xml_path, xml_filename), dataset_with_relation)
 
     return
 
@@ -199,7 +216,7 @@ def generate_news_finance_dataset():
         for sen in sen_list:
             if len(sen.split(' ')) <= 10:
                 continue
-            if "/" in sen or ",," in sen or "…" in sen or "[]" in sen:
+            if "/" in sen or ",," in sen or "…" in sen or "[]" in sen or '\n' in sen or '\t' in sen:
                 continue 
             if check_important_words_matching(sen):
                 text_data.append(sen)
@@ -209,7 +226,7 @@ def generate_news_finance_dataset():
     dataset_without_relation = get_noun_phrases(text_data)
     dataset_with_relation = generate_relations(dataset_without_relation)
     # print(len(dataset_with_relation))
-    create_xml(os.path.join(xml_path, 'news_finance.xml'), dataset_with_relation)
+    # create_xml(os.path.join(xml_path, 'news_finance.xml'), dataset_with_relation)
 
 
 def main():
