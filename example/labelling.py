@@ -2,6 +2,7 @@
 # preprocess raw text data and generate our dataset by labelling entity relations within each sentence
 
 import os
+import string
 from dataclasses import dataclass
 from textblob import TextBlob
 import nltk
@@ -71,6 +72,8 @@ def split_sentences(input_str: str) -> str:
     output_str = output_str.replace("-", ",")
     output_str = output_str.replace("%", " percent")
     output_str = output_str.replace("&", " and")
+    output_str = output_str.replace("\\", " ")
+    output_str = output_str.replace('[{}]'.format(string.punctuation), '')
     return output_str.split(". ")
 
 
@@ -91,7 +94,7 @@ def get_noun_phrases(cleaned_str: list):
     return dataset
 
 
-def generate_relations(dataset: list, threshold=0.75):
+def generate_relations(dataset: list, threshold=0.70):
     # relation extraction by NER result OpenNRE:https://github.com/thunlp/OpenNRE
     model = opennre.get_model('wiki80_bert_softmax')
     new_dataset = []
@@ -105,7 +108,7 @@ def generate_relations(dataset: list, threshold=0.75):
                 res1 = model.infer({'text': text_data.sentence, 'h': {'pos': text_data.entityIdx[i][1]}, 't': {'pos': text_data.entityIdx[j][1]}})
                 res2 = model.infer({'text': text_data.sentence, 'h': {'pos': text_data.entityIdx[j][1]}, 't': {'pos': text_data.entityIdx[i][1]}})
                 # check if the confidence is larger than threshold
-                if float(min(res1[1], res2[1])) <= threshold:
+                if float(max(res1[1], res2[1])) <= threshold:
                     continue
                 # check if A == B:
                 if text_data.entityIdx[i][0] == text_data.entityIdx[j][0]:
