@@ -62,7 +62,7 @@ important_words_matching = ['laundering', 'launder', 'scam', 'scammer', 'fraud',
                     'indirect tax', 'uneconomical', 'third Party Laundering', \
                     'pep', 'risk investment', 'jurisdiction', 'counterparty', \
                     'counterparties', 'shell company', 'shell companies', 'fake account', 'fake identity', 'controlled by third party',  \
-                    'offshore', 'nonresident', 'incommensurate', 'operated by third party',\
+                    'offshore company', 'nonresident', 'incommensurate', 'operated by third party',\
                     'unlicensed', 'insecure', 'insecurity', \
                     'political', 'politically exposed person', 'courier', 'evasive', 'reluctant', \
                     'casino', 'charitable', 'npo', \
