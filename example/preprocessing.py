@@ -65,7 +65,7 @@ important_words_matching = ['laundering', 'launder', 'scam', 'scammer', 'fraud',
                     'offshore company', 'nonresident', 'incommensurate', 'operated by third party',\
                     'unlicensed', 'insecure', 'insecurity', \
                     'political', 'politically exposed person', 'courier', 'evasive', 'reluctant', \
-                    'casino', 'charitable', 'npo', \
+                    'casino', 'charitable', 'npo', "kidnap", \
                     'questioned','evasive', 'passive', 'cyber crime', 'cybercrime' \
                     'oversea company', 'insider trading', 'weapon', 'gun', \
                     'violate law', 'violate ordinance']
@@ -141,7 +141,6 @@ def write_txt(filename, list_data):
 
 
 def filtering_fs(text_list):
-    
     output_list = []
     for sentences in text_list:
         # split sentences
@@ -152,11 +151,23 @@ def filtering_fs(text_list):
 
 def generate_financial_phrase_raw_dataset():
     raw_financial_phrase_bank_data = read_csv("../../datasets/kaggle_csv/all-data.txt")
-
-    dataset_without_relation = get_noun_phrases(raw_financial_phrase_bank_data[:10])
+    text_data = []
+    for sentences in raw_financial_phrase_bank_data:
+        sentences = simple_filtering(sentences)
+        sentences_list = sentences.split(".")
+        text = []
+        for sen in sentences_list:
+            if len(sen.split(' ')) <= 10:
+                continue
+            if "/" in sen or ",," in sen or "…" in sen or "[]" in sen or '\n' in sen or '\t' in sen:
+                continue 
+            if check_important_words_matching(sen):
+                text.append(sen)
+        text_data.extend(text)
+    write_txt(filename="financial_phrase.txt", list_data=text_data)
+    dataset_without_relation = get_noun_phrases(text_data)
     dataset_with_relation = generate_relations(dataset_without_relation)
-    # print(dataset_with_relation)
-    # no good results 
+    create_xml(os.path.join(xml_path, 'financial_phrase.xml'), dataset_with_relation)
 
 
 def generate_financial_statement_raw_dataset():
@@ -236,16 +247,16 @@ def generate_news_finance_dataset():
         f.write(str(text_data))
     dataset_without_relation = get_noun_phrases(text_data)
     dataset_with_relation = generate_relations(dataset_without_relation)
-    # print(len(dataset_with_relation))
-    # create_xml(os.path.join(xml_path, 'news_finance.xml'), dataset_with_relation)
+    print(len(dataset_with_relation))
+    create_xml(os.path.join(xml_path, 'news_finance.xml'), dataset_with_relation)
 
 
 def main():
     # 1 financial phrase rank: results of relation extraction are not as good as expected
-    # generate_financial_phrase_raw_dataset()
+    generate_financial_phrase_raw_dataset()
 
     # 2 financial statement -> 55 sentences datasets/xmls/financial_statements.txt
-    generate_financial_statement_raw_dataset()
+    # generate_financial_statement_raw_dataset()
 
     # 3 trade the event finance: 
     # generate_trade_event_dataset()
