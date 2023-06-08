@@ -58,7 +58,7 @@ important_words_matching = ['laundering', 'launder', 'scam', 'scammer', 'fraud',
                     'kidnapping', 'illegal restraint', 'restraint', 'hostage', 'hostage-taking', 'robbery', 'theft', \
                     'excise taxes', 'excise duties', 'extortion', 'forgery', 'forgeries', \
                     'manipulation', 'suspicious', 'suspected', 'Terrorist Financing', \
-                    'organized crime', 'racketeer', 'illegal fund', 'movement', \
+                    'organized crime', 'racketeer', 'illegal fund', 'tax crime', \
                     'indirect tax', 'uneconomical', 'third Party Laundering', \
                     'pep', 'risk investment', 'jurisdiction', 'counterparty', \
                     'counterparties', 'shell company', 'shell companies', 'fake account', 'fake identity', 'controlled by third party',  \
@@ -193,7 +193,7 @@ def generate_financial_statement_raw_dataset():
 
     # remove duplicates
     total_text_data = list(dict.fromkeys(total_text_data))
-    
+
     txt_filename = 'financial_statements.txt'
     write_txt(txt_filename, total_text_data)
     
