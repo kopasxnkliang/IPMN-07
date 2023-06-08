@@ -4,6 +4,7 @@
 import os
 import csv
 import json
+import string
 from io import StringIO
 import pandas as pd
 from tqdm import tqdm
@@ -45,28 +46,28 @@ important_words = ['laundering', 'launder', 'scam', 'scammer', 'fraud', 'transac
                     'nature', 'incorporation', 'corporation', 'nation', 'law', 'disclosure', 'ordinance']
 
 important_words_matching = ['laundering', 'launder', 'scam', 'scammer', 'fraud', 'illegal', 'illicit',
-                    'criminal group', 'crime', 'crimes', 'criminal', 'terrorism', 'terrorist', 
+                    'criminal group', 'crime', 'criminal', 'terrorism', 'terrorist', 
                     'trafficking', 'terrorist financing', 'sexual exploitation', 'migrant smuggling', 'smuggle' \
                     'human trafficking', 'terrorists', 'child', 'sex', 'arms', 'stealing', 'steal', \
                     'stole', 'stealing', 'goods stolen', 'corrupt', 'bribery', \
                     'corrupted', 'corrupts', 'bribe', 'briberies', 'email scam', \
-                    'invest scam', 'narcotic drugs', 'drug', \
+                    'invest scam', 'narcotic drugs', 'drug', 'drug dealing', \
                     'psychotropic', 'psychotropic substances', 'romance scam', 'romance', 'deceive', 'deception', \
                     'telephone scam', 'phone scam', 'internet scam', 'counterfeiting currency', 'environmental crime', 
                     'piracy', 'illegal product', 'murder', 'grievous bodily injury', 'injuries', 'body injury', \
                     'kidnapping', 'illegal restraint', 'restraint', 'hostage', 'hostage-taking', 'robbery', 'theft', \
                     'excise taxes', 'excise duties', 'extortion', 'forgery', 'forgeries', \
-                    'manipulation', 'suspicious', 'suspected', \
+                    'manipulation', 'suspicious', 'suspected', 'Terrorist Financing', \
                     'organized crime', 'racketeer', 'illegal fund', 'movement', \
-                    'indirect tax', 'uneconomical', \
+                    'indirect tax', 'uneconomical', 'third Party Laundering', \
                     'pep', 'risk investment', 'jurisdiction', 'counterparty', \
                     'counterparties', 'shell company', 'shell companies', 'fake account', 'fake identity', 'controlled by third party',  \
                     'offshore', 'nonresident', 'incommensurate', 'operated by third party',\
                     'unlicensed', 'insecure', 'insecurity', \
                     'political', 'politically exposed person', 'courier', 'evasive', 'reluctant', \
                     'casino', 'charitable', 'npo', \
-                    'questioned','evasive', 'passive',  \
-                    'oversea company', \
+                    'questioned','evasive', 'passive', 'cyber crime', 'cybercrime' \
+                    'oversea company', 'insider trading', 'weapon', 'gun', \
                     'violate law', 'violate ordinance']
 
 
@@ -87,6 +88,7 @@ def check_important_words(sentence):
     return False
 
 def simple_filtering(input_str):
+    
     output_str = input_str.replace("?", ".")
     output_str = output_str.strip("`")
     output_str = output_str.strip("'")
@@ -100,6 +102,8 @@ def simple_filtering(input_str):
     output_str = output_str.replace("—", ",")
     output_str = output_str.replace("%", " percent")
     output_str = output_str.replace("&", " and ")
+    output_str = output_str.replace('[{}]'.format(string.punctuation), '')
+    output_str += '.'
     return output_str.lower()
 
 
@@ -123,19 +127,17 @@ def read_csv(filename):
     return raw_data
 
 
-def generate_financial_phrase_raw_dataset():
-    raw_financial_phrase_bank_data = read_csv("../../datasets/kaggle_csv/all-data.txt")
-    dataset_without_relation = get_noun_phrases(raw_financial_phrase_bank_data[:10])
-    dataset_with_relation = generate_relations(dataset_without_relation)
-    # print(dataset_with_relation)
-    # no good results 
-
-
 def read_from_json(filepath, filename):
     with open(os.path.join(filepath, filename), "r") as f:
         raw_data = json.load(f)
     df_tag = pd.read_csv(StringIO(raw_data['tag.txt']), sep='\t', na_filter=False)
     return list(df_tag['doc'])
+
+
+def write_txt(filename, list_data):
+    print(f"Writing {len(list_data)} pieces of text data to {os.path.join(xml_path, filename)} ... ")
+    with open(os.path.join(xml_path, filename), "w") as f:
+        f.write(str(list_data))
 
 
 def filtering_fs(text_list):
@@ -146,6 +148,15 @@ def filtering_fs(text_list):
         sen_list = [each+'.' for each in sentences.split('. ')[:-1]]
         output_list.extend(sen_list)
     return output_list
+
+
+def generate_financial_phrase_raw_dataset():
+    raw_financial_phrase_bank_data = read_csv("../../datasets/kaggle_csv/all-data.txt")
+
+    dataset_without_relation = get_noun_phrases(raw_financial_phrase_bank_data[:10])
+    dataset_with_relation = generate_relations(dataset_without_relation)
+    # print(dataset_with_relation)
+    # no good results 
 
 
 def generate_financial_statement_raw_dataset():
@@ -173,6 +184,7 @@ def generate_financial_statement_raw_dataset():
         # with open(os.path.join(xml_path, txt_filename), "w") as f:
         #     f.write(str(text_data))  
 
+
         # dataset_without_relation = get_noun_phrases(raw_text_data[json_file])
         # dataset_with_relation = generate_relations(dataset_without_relation)
         
@@ -181,10 +193,9 @@ def generate_financial_statement_raw_dataset():
 
     # remove duplicates
     total_text_data = list(dict.fromkeys(total_text_data))
+    
     txt_filename = 'financial_statements.txt'
-    print(f"Writing {len(total_text_data)} pieces of text data to {os.path.join(xml_path, txt_filename)} ... ")
-    with open(os.path.join(xml_path, txt_filename), "w") as f:
-        f.write(str(total_text_data))  
+    write_txt(txt_filename, total_text_data)
     
     dataset_without_relation = get_noun_phrases(total_text_data)
     dataset_with_relation = generate_relations(dataset_without_relation)
@@ -232,8 +243,10 @@ def generate_news_finance_dataset():
 def main():
     # 1 financial phrase rank: results of relation extraction are not as good as expected
     # generate_financial_phrase_raw_dataset()
-    # 2 financial statement
+
+    # 2 financial statement -> 55 sentences datasets/xmls/financial_statements.txt
     generate_financial_statement_raw_dataset()
+
     # 3 trade the event finance: 
     # generate_trade_event_dataset()
     
