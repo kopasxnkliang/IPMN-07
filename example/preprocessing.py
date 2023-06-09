@@ -99,7 +99,7 @@ def simple_filtering(input_str):
     output_str = output_str.replace(";", ",")
     output_str = output_str.replace(":", ",")
     output_str = output_str.replace("--", ",")
-    output_str = output_str.replace("-", ",")
+    # output_str = output_str.replace("-", ",")
     output_str = output_str.replace("—", ",")
     output_str = output_str.replace("%", " percent")
     output_str = output_str.replace("&", " and ")
