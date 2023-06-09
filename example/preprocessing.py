@@ -253,12 +253,27 @@ def generate_news_finance_dataset():
 
 
 def generate_aylien_news_finance_dataset(path='./financial_crime_aylien_news_data.json'):
-    xml_path = '.'
+    xml_path = '../../datasets/xmls'
     text_data = []
+
+    # dealing with '(Reuters) -' or '(Reuters) --' or 'AAA:'
+    def starterFilter(s):
+        j = s.find(':')
+        if j!=-1 and j<50:
+            return s[j+1:]
+        i = s.find('-')
+        if i!=-1 and i<50:
+            if s[i + 1] == '-':
+                i += 1
+            return s[i+1:]
+        return s
+        
+
+
     with open(path,'r',encoding='utf-8') as f:
         for line in tqdm(f.readlines()):
             js = json.loads(line)
-            sentences = js['body'].split('. ')
+            sentences = starterFilter(js['body']).split('. ')
             for sen in sentences:
                 sen = simple_filtering(sen)
                 if len(sen.split(' ')) <= 10:
