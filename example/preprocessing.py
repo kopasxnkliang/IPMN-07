@@ -15,6 +15,7 @@ from labelling import get_noun_phrases, create_xml
 from labelling import generate_relations
 
 
+
 dataset_path = "../../datasets/kaggle_json"
 txt_path = "../../datasets/kaggle_txt"
 xml_path = "../../datasets/xmls"
@@ -251,9 +252,34 @@ def generate_news_finance_dataset():
     create_xml(os.path.join(xml_path, 'news_finance.xml'), dataset_with_relation)
 
 
+def generate_aylien_news_finance_dataset(path='./financial_crime_aylien_news_data.json'):
+    xml_path = '.'
+    text_data = []
+    with open(path,'r',encoding='utf-8') as f:
+        for line in tqdm(f.readlines()):
+            js = json.loads(line)
+            sentences = js['body'].split('. ')
+            for sen in sentences:
+                sen = simple_filtering(sen)
+                if len(sen.split(' ')) <= 10:
+                    continue
+                if "/" in sen or ",," in sen or "…" in sen or "[]" in sen or '\n' in sen or '\t' in sen:
+                    continue 
+                if check_important_words_matching(sen):
+                    text_data.append(sen)
+    print(len(text_data))
+    with open(os.path.join(xml_path, 'aylien_news_finance.txt'), "w") as f:
+        f.write(str(text_data))
+    dataset_without_relation = get_noun_phrases(text_data)
+    dataset_with_relation = generate_relations(dataset_without_relation)
+    print(len(dataset_with_relation))
+    create_xml(os.path.join(xml_path, 'aylien_news_finance.xml'), dataset_with_relation)
+                
+
+
 def main():
     # 1 financial phrase rank: results of relation extraction are not as good as expected
-    generate_financial_phrase_raw_dataset()
+    # generate_financial_phrase_raw_dataset()
 
     # 2 financial statement -> 55 sentences datasets/xmls/financial_statements.txt
     # generate_financial_statement_raw_dataset()
@@ -263,6 +289,8 @@ def main():
     
     # 4 news finance
     # generate_news_finance_dataset()
+
+    generate_aylien_news_finance_dataset()
 
     # dataset5 = load_dataset("JanosAudran/financial-reports-sec", "large_lite")
 
