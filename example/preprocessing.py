@@ -74,14 +74,14 @@ important_words_matching = ['laundering', 'launder', 'scam', 'scammer', 'fraud',
 
 def check_important_words_matching(sentence):
     for word in important_words_matching:
-        if word in sentence:
+        if word in sentence.lower():
             return True
     return False
 
 
 def check_important_words(sentence):
 
-    word_list = sentence.split(' ')
+    word_list = sentence.lower().split(' ')
     for word in important_words:
         if word in word_list:
             return True
