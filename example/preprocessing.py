@@ -276,7 +276,7 @@ def generate_aylien_news_finance_dataset(path='./financial_crime_aylien_news_dat
             sentences = starterFilter(js['body']).split('. ')
             for sen in sentences:
                 sen = simple_filtering(sen)
-                if len(sen.split(' ')) <= 10:
+                if len(sen.split(' ')) <= 10 or len(sen.split(' ')) > 40:
                     continue
                 if "/" in sen or ",," in sen or "…" in sen or "[]" in sen or '\n' in sen or '\t' in sen:
                     continue 
