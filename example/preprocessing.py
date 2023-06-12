@@ -368,12 +368,12 @@ def generate_nlpaueb_finer139_dataset(dataset_name = dataset4):
       total_text_data.extend(text_data)
       print(len(text_data))
     print(len(total_text_data))
-    with open('IPMN-07/datasets/xmls/nlpaueb_finer139.txt', "w") as f:
+    with open(os.path.join(xml_path, 'nlpaueb_finer139.txt'), "w") as f:
         f.write(str(total_text_data))
     # dataset_without_relation = get_noun_phrases(total_text_data)
     # dataset_with_relation = generate_relations(dataset_without_relation)
     # print(len(dataset_with_relation))
-    # create_xml('IPMN-07/datasets/xmls/nlpaueb_finer139.xml', dataset_with_relation)
+    # create_xml(os.path.join(xml_path, 'nlpaueb_finer139.xml'), dataset_with_relation)
 
     
 def main():
