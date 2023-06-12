@@ -4,7 +4,8 @@
 import os
 import string
 from dataclasses import dataclass
-from textblob import TextBlob
+# from textblob import TextBlob
+import spacy
 import nltk
 # nltk.download('brown')
 # nltk.download('punkt')
@@ -77,21 +78,45 @@ def split_sentences(input_str: str) -> str:
     return output_str.split(". ")
 
 
-def get_noun_phrases(cleaned_str: list):
-    dataset = []
-    print("Extracting noun phrases ...")
-    for idx, sen in tqdm(enumerate(cleaned_str)):
-        blob = TextBlob(sen)
-        entityIdx = []
-        t = sen.lower()
-        for each in blob.noun_phrases:
-            i = t.find(each)
-            j = i + len(each)
-            entityIdx.append([each, (i,j)])
-        data = TextData(idx=idx, sentence=sen, entityIdx=entityIdx, relations=[])
-        dataset.append(data)
+# def get_noun_phrases(cleaned_str: list):
+#     dataset = []
+#     print("Extracting noun phrases ...")
+#     for idx, sen in tqdm(enumerate(cleaned_str)):
+#         blob = TextBlob(sen)
+#         entityIdx = []
+#         t = sen.lower()
+#         for each in blob.noun_phrases:
+#             i = t.find(each)
+#             j = i + len(each)
+#             entityIdx.append([each, (i,j)])
+#         data = TextData(idx=idx, sentence=sen, entityIdx=entityIdx, relations=[])
+#         dataset.append(data)
     
-    return dataset
+#     return dataset
+
+class Parser:
+    def __init__(self, model_name = 'en_core_web_trf', cuda_idx = -1):
+        # python -m spacy download en_core_web_trf 
+        # is needed, or use other models. See https://spacy.io/models
+        if cuda_idx > -1:
+            raise spacy.require_gpu(cuda_idx)
+        self.p = spacy.load(model_name)
+        print(f'{model_name} is loaded')
+    
+    def pars(self, sen: str):
+        output = self.p(sen)
+        entityIdx = []
+        s = set()
+        for np in output.noun_chunks:
+            w = np.text
+            if w in s:
+                continue
+            s.add(w)
+            i = sen.find(w)
+            j = i + len(w)
+            entityIdx.append([w, (i,j)])
+        data = TextData(idx=-1, sentence=sen, entityIdx=entityIdx, relations=[])
+        return data
 
 
 def generate_relations(dataset: list, threshold=0.70):

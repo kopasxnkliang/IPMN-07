@@ -11,8 +11,8 @@ from tqdm import tqdm
 
 from datasets import load_dataset
 
-from labelling import get_noun_phrases, create_xml
-from labelling import generate_relations
+# from labelling import get_noun_phrases
+from labelling import generate_relations, create_xml, Parser
 
 
 
@@ -71,6 +71,16 @@ important_words_matching = ['laundering', 'launder', 'scam', 'scammer', 'fraud',
                     'oversea company', 'insider trading', 'weapon', 'gun', \
                     'violate law', 'violate ordinance']
 
+parser = Parser()
+
+def get_noun_phrases(cleaned_str: list):
+    dataset = []
+    print("Extracting noun phrases ...")
+    for idx, sen in tqdm(enumerate(cleaned_str)):
+        data = parser.pars(sen)
+        data.idx = idx
+        dataset.append(data)
+    return dataset
 
 
 def check_important_words_matching(sentence):
@@ -281,10 +291,9 @@ def generate_aylien_news_finance_dataset(path='./financial_crime_aylien_news_dat
                     break
             if not flag:
                 continue
-            
-            sentences = starterFilter(js['body']).split('. ')
+            sentences = starterFilter(js['body'].replace('’',"'").replace('“','"').replace('”','"')).split('.')
             for sen in sentences:
-                sen = simple_filtering(sen)
+                sen = simple_filtering(sen).strip()
                 if len(sen.split(' ')) <= 10 or len(sen.split(' ')) > 40:
                     continue
                 if "/" in sen or ",," in sen or "…" in sen or "[]" in sen or '\n' in sen or '\t' in sen:
