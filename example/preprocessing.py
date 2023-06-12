@@ -340,28 +340,40 @@ def generate_JanosAudran_fina_report_dataset(dataset_name = dataset5):
 def generate_nlpaueb_finer139_dataset(dataset_name = dataset4):
     total_text_data = []
     sub_dataset = ['train', 'validation', 'test']
+    ignore_words = []
+    start_word = '( "'
+    end_word = '" )'
     for dataset in tqdm(sub_dataset):
       text_data = []
       for line in dataset_name[dataset]['tokens']:
           sentence = ' '.join(line)
           sentence = simple_filtering(sentence)
-          sentences_list = [each+'.' for each in sentence[:-1].split('. ')]
+          sentences_list = [each+'.' for each in sentence[:-2].split(' . ')]
           for sen in sentences_list:
             if len(sen.split(' ')) <= 10 or len(sen.split(' ')) > 40:
                 continue
             if "/" in sen or ",," in sen or "…" in sen or "[]" in sen or '\n' in sen or '\t' in sen:
                 continue 
             if check_important_words_matching(sen):
-                text_data.append(sen)
+                if start_word in sen:
+                    start_idx = sen.find(start_word) + 3
+                    end_idx = sen.find(end_word) - 1
+                    if sen[start_idx:end_idx] in ignore_words:
+                        continue
+                    else:
+                        ignore_words.append(sentence[start_idx:end_idx])
+                        text_data.append(sen)
+                else:
+                    text_data.append(sen)
       total_text_data.extend(text_data)
       print(len(text_data))
     print(len(total_text_data))
-    with open(os.path.join(xml_path, 'nlpaueb_finer139.txt'), "w") as f:
+    with open('IPMN-07/datasets/xmls/nlpaueb_finer139.txt', "w") as f:
         f.write(str(total_text_data))
-    dataset_without_relation = get_noun_phrases(total_text_data)
-    dataset_with_relation = generate_relations(dataset_without_relation)
-    print(len(dataset_with_relation))
-    create_xml(os.path.join(xml_path, 'nlpaueb_finer139.xml'), dataset_with_relation)
+    # dataset_without_relation = get_noun_phrases(total_text_data)
+    # dataset_with_relation = generate_relations(dataset_without_relation)
+    # print(len(dataset_with_relation))
+    # create_xml('IPMN-07/datasets/xmls/nlpaueb_finer139.xml', dataset_with_relation)
 
     
 def main():
@@ -384,7 +396,7 @@ def main():
 
     # dataset4 = load_dataset("nlpaueb/finer-139", split="train")
     # dataset4 = load_dataset("nlpaueb/finer-139") 
-    # 9368 sentences (7295 from train set, 923 from validation set, 1150 from test set)
+    # 8314 sentences (6468 from train set, 807 from validation set, 1039 from test set)
     # generate_nlpaueb_finer139_dataset()
 
 if __name__ == '__main__':
