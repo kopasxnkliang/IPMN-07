@@ -91,6 +91,7 @@ def check_important_words(sentence):
 def simple_filtering(input_str):
     
     output_str = input_str.replace("?", ".")
+    output_str = output_str.strip()
     output_str = output_str.strip("`")
     output_str = output_str.strip("'")
     output_str = output_str.strip('"')
@@ -253,8 +254,7 @@ def generate_news_finance_dataset():
 
 
 def generate_aylien_news_finance_dataset(path='./financial_crime_aylien_news_data.json'):
-    xml_path = '../../datasets/xmls'
-    text_data = []
+    text_data = set()
 
     # dealing with '(Reuters) -' or '(Reuters) --' or 'AAA:'
     def starterFilter(s):
@@ -269,10 +269,19 @@ def generate_aylien_news_finance_dataset(path='./financial_crime_aylien_news_dat
         return s
         
 
-
     with open(path,'r',encoding='utf-8') as f:
         for line in tqdm(f.readlines()):
             js = json.loads(line)
+
+            # delete sentences that not related to fin
+            flag = False
+            for cate in js['categories']:
+                if cate['confident'] and cate['id'].startswith("IAB13"): # fin relates
+                    flag = True
+                    break
+            if not flag:
+                continue
+            
             sentences = starterFilter(js['body']).split('. ')
             for sen in sentences:
                 sen = simple_filtering(sen)
@@ -281,7 +290,8 @@ def generate_aylien_news_finance_dataset(path='./financial_crime_aylien_news_dat
                 if "/" in sen or ",," in sen or "…" in sen or "[]" in sen or '\n' in sen or '\t' in sen:
                     continue 
                 if check_important_words_matching(sen):
-                    text_data.append(sen)
+                    text_data.add(sen)
+    text_data = list(text_data)
     print(len(text_data))
     with open(os.path.join(xml_path, 'aylien_news_finance.txt'), "w") as f:
         f.write(str(text_data))
