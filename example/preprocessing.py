@@ -75,8 +75,9 @@ parser = Parser()
 
 def get_noun_phrases(cleaned_str: list):
     dataset = []
+    l = len(cleaned_str)
     print("Extracting noun phrases ...")
-    for idx, sen in tqdm(enumerate(cleaned_str)):
+    for idx, sen in tqdm(enumerate(cleaned_str), total=l):
         data = parser.pars(sen)
         data.idx = idx
         dataset.append(data)
