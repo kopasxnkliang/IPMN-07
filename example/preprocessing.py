@@ -98,8 +98,13 @@ def check_important_words(sentence):
             return True
     return False
 
+
+zhC = "，。！？；：“”‘’（）【】"
+enC = """,.!?;:""''()[]"""
+table = str.maketrans(zhC,enC)
 def simple_filtering(input_str):
-    
+    input_str = input_str.translate(table)
+
     output_str = input_str.replace("?", ".")
     output_str = output_str.strip()
     output_str = output_str.strip("`")
@@ -291,7 +296,7 @@ def generate_aylien_news_finance_dataset(path='./financial_crime_aylien_news_dat
                     break
             if not flag:
                 continue
-            sentences = starterFilter(js['body'].replace('’',"'").replace('“','"').replace('”','"')).split('.')
+            sentences = starterFilter(js['body']).split('.')
             for sen in sentences:
                 sen = simple_filtering(sen).strip()
                 if len(sen.split(' ')) <= 10 or len(sen.split(' ')) > 40:
