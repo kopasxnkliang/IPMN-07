@@ -15,14 +15,14 @@ def write_mtriples(folder_path, dataset_name, mtriples, adds="_mtriples.txt"):
         write_data = ""
         for mtri in mtriples:
             write_data += f"'{mtri}'\n"
-        f.write(write_data)
+        f.write(write_data[:-1])
 
 def write_sentences(folder_path, dataset_name, sentences, adds="_sentences.txt"):
     with open(os.path.join(folder_path, dataset_name+adds), "w") as f:
         write_data = ""
         for sen in sentences:
             write_data += str(sen)+"\n"
-        f.write(write_data)
+        f.write(write_data[:-1])
 
 def write_txt(folder_path, dataset_name, mtriples, sentences, split=False):
     folder = os.path.exists(folder_path)
