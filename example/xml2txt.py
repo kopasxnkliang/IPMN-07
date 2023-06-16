@@ -51,22 +51,9 @@ def list2str(str_list):
     return output
 
 
-def formatting():
-    xml_file = 'STR_data.xml'
-    ori_folder_path = '../../datasets/xmls/'
-    dst_folder_path = '../../datasets/str_data/'
+def formatting(ori_folder_path, xml_file, dst_folder_path):
 
-    # root = etree.Element('benchmark')
-    # entry = etree.SubElement(root,'entries')
-
-    # read xml data
-    # with open(os.path.join(ori_folder_path, xml_file), 'r') as f:
-    #     data = f.read()
-    # str_data = BeautifulSoup(data, "xml")
-    # print(str_data)
-
-    tree = etree.parse(xml_file)
-    # tree = etree.parse(os.path.join(ori_folder_path, xml_file))
+    tree = etree.parse(os.path.join(ori_folder_path, xml_file))
     root = tree.getroot()
     N = len(root.xpath('//entry'))
 
@@ -91,7 +78,10 @@ def formatting():
 
 
 def main():
-    formatting()
+    xml_file = 'STR_data.xml'  # datasets/xmls/STR_data.xml
+    ori_folder_path = '../../datasets/xmls/'
+    dst_folder_path = '../../datasets/str_data/'
+    formatting(ori_folder_path, xml_file, dst_folder_path)
 
 
 if __name__ == '__main__':
