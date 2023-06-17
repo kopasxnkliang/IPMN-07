@@ -1,10 +1,15 @@
 # IPMN-07
 
 ## In Progress:
-### 1. Description words / figures collection (90%)
-### 2. Data Preprocessing (filtering) and set up our dataset (using OpenNRE) (10%)
-### 3. MVP-data-to-text Model Fine-tuning / GPT Fine-tuning
-### 4. API Implementation
+#### 1 Description words collection (100%)
+#### 2 Data Preprocessing and set up our dataset (100%)
+- online meeting with Prof. YIU at 10:30-11:100 on 6.23
+#### 3 MVP-data-to-text Model Fine-tuning & Optimizing (In progress) - before 7.12
+- fine-tune and select the model with lower training loss as well as higher generation score 
+#### 4 API Implementation  (In progress) - before 7.12
+- Frontend / Backend / API
+#### 5 Final report - before 7.19
+
 
 ## System design details:
 ### 1. Backend -- Python
