@@ -1,6 +1,12 @@
-torch
 transformers
 pytest
 scikit-learn
 scipy
 nltk
+sacrebleu
+accelerate==0.17.1
+wandb
+lxml
+hyperopt
+colorama
+
