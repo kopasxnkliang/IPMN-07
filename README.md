@@ -19,4 +19,6 @@ closed source file format developed by Adobe. This means
 it is nearly impossible to automatically edit the file.
 
 ### 2. Frontend -- Vue.js
-Using Vue.js to construct the website
+Framework: Vue3 (https://cn.vuejs.org/guide/quick-start.html)
+UI library: Element-plus (https://element-plus.org/zh-CN/)
+Http request: Axios (https://www.npmjs.com/package/vue-axios)
