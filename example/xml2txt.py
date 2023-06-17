@@ -21,7 +21,7 @@ def write_sentences(folder_path, dataset_name, sentences, adds="_sentences.txt")
     with open(os.path.join(folder_path, dataset_name+adds), "w") as f:
         write_data = ""
         for sen in sentences:
-            write_data += str(sen)+"\n"
+            write_data += str(sen[0])+"\n"
         f.write(write_data[:-1])
 
 def write_txt(folder_path, dataset_name, mtriples, sentences, split=False):
@@ -40,8 +40,8 @@ def write_txt(folder_path, dataset_name, mtriples, sentences, split=False):
         X_train, X_val, y_train, y_val = train_test_split(X_trainval, y_trainval, test_size=0.22, random_state=42)
         write_mtriples(folder_path, dataset_name="train", mtriples=X_train, adds=".src")
         write_sentences(folder_path, dataset_name="train", sentences=y_train, adds=".tgt")
-        write_mtriples(folder_path, dataset_name="val", mtriples=X_val, adds=".src")
-        write_sentences(folder_path, dataset_name="val", sentences=y_val, adds=".tgt")
+        write_mtriples(folder_path, dataset_name="valid", mtriples=X_val, adds=".src")
+        write_sentences(folder_path, dataset_name="valid", sentences=y_val, adds=".tgt")
         
 
 
