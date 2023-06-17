@@ -10,5 +10,6 @@ lxml
 hyperopt
 colorama
 rouge_score
+pycocoevalcap
 
 
