@@ -5,7 +5,7 @@ import os
 # import xml.etree.ElementTree as ET
 from lxml import etree
 # from xml.dom import minidom
-
+from tqdm import tqdm
 # from bs4 import BeautifulSoup
 from sklearn.model_selection import train_test_split
 
@@ -37,7 +37,7 @@ def write_txt(folder_path, dataset_name, mtriples, sentences, split=False):
         X_trainval, X_test, y_trainval, y_test = train_test_split(mtriples, sentences, test_size=0.1, random_state=42)
         write_mtriples(folder_path, dataset_name="test", mtriples=X_test, adds=".src")
         write_sentences(folder_path, dataset_name="test", sentences=y_test, adds=".tgt")
-        X_train, X_val, y_train, y_val = train_test_split(X_trainval, y_trainval, test_size=0.22, random_state=42)
+        X_train, X_val, y_train, y_val = train_test_split(X_trainval, y_trainval, test_size=0.12, random_state=42)
         write_mtriples(folder_path, dataset_name="train", mtriples=X_train, adds=".src")
         write_sentences(folder_path, dataset_name="train", sentences=y_train, adds=".tgt")
         write_mtriples(folder_path, dataset_name="valid", mtriples=X_val, adds=".src")
@@ -46,6 +46,7 @@ def write_txt(folder_path, dataset_name, mtriples, sentences, split=False):
 
 
 def list2str(str_list):
+    str_list = [xx for xx in str_list if xx[0] != '.']
     separator = ' [SEP] '
     output = separator.join(str_list)
     return output
@@ -55,11 +56,13 @@ def formatting(ori_folder_path, xml_file, dst_folder_path):
 
     tree = etree.parse(os.path.join(ori_folder_path, xml_file))
     root = tree.getroot()
-    N = len(root.xpath('//entry'))
+
+    N_entry = len(root.xpath('//entry'))
 
     mtriple_list, sentence_list = [], []
-    for i in range(1, N+1):
-        mtriple_list.append(list2str(root.xpath(f'//entry[{i}][contains(@category, "MISC")]/modifiedtripleset/mtriple/text()')))
+    for i in tqdm(range(1, N_entry+1)):
+        mtriples = list2str(root.xpath(f'//entry[{i}][contains(@category, "MISC")]/modifiedtripleset/mtriple/text()'))
+        mtriple_list.append(mtriples)
         sen = root.xpath(f'//entry[{i}]/lex/text()')[0]
         if ' ' == sen[0]:
             sentence_list.append([sen[1:]])
