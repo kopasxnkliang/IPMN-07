@@ -1,17 +1,17 @@
-from flask import Flask
+from flask import Flask, request
 
 app = Flask(__name__)
 
 
-@app.route('/hello/<uname>', methods=['GET'])
-def hello(uname):
-    ret = {
-        "msg": "Hello," + uname
-    }
+# post form data: {"string": "This is uploaded sample", "int": 1234567890}
+
+@app.route('/hello', methods=['POST'])
+def hello():
+    print(request.json)
     return {
         "state": 0,
         "err": None,
-        "data": ret
+        "data": ["this is a test ret data"],
     }
 
 
