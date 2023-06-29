@@ -3,28 +3,46 @@
 	<div >
 		<el-collapse v-model="activeSentence" accordion @change="changeCollapse" >
 				<el-collapse-item v-for="(sen, index) in Sentences" 
-				v-bind:title="'Sentence '+(index+1)"
+				
 				v-bind:name="sen.ID" :class="'sentenceBox'">
-					<!-- {{sen}} -->
-					<div :class="'SentenceBody'">
-						<div :class="'relation'">
-							<!-- <div v-for="r in sen.Relation" :class="'relationBox'">
-								<p :class="'TripleSet'">{{r[0]}} | {{r[1]}} | {{r[2]}}</p>
-								<el-button :icon="Delete" circle size="small" :class="'SetDeleteButton'"></el-button>
-							</div> -->
-							<el-tag v-for="r in ShowTag" 
-							:class="'relationBox'" type="info" closable 
-							:key="r" @close="closeTag(r)">
-								{{r}}
+				<template #title v-if="activeSentence==sen.ID">
+					Sentence {{index+1}}
+				</template>
+				<template #title v-else >
+					<div :class="'omittedBox'">
+						<div :class="'omittedRelat'">
+							<el-tag v-for="r in sen.Relation" 
+							:class="'relationTag'" type="info" :key="r"> 
+								{{r}} 
 							</el-tag>
-							<el-button plain :icon="Plus" :class="'relationBox'"></el-button>
 						</div>
-						<div :class="'SenText'">
-							<el-skeleton :rows="2" v-if="sen.Text==''" animated ></el-skeleton>
-							<el-input v-else v-model="ShowText" 
-							type="textarea" autosize></el-input>
+						<div :class="'omittedText'">
+							<el-skeleton :rows="0" v-if="sen.Text==''" animated ></el-skeleton>
+							<p v-else>{{sen.Text}}</p>
 						</div>
 					</div>
+					
+				</template>
+				<!-- {{sen}} -->
+				<div :class="'SentenceBody'">
+					<div :class="'relation'">
+						<!-- <div v-for="r in sen.Relation" :class="'relationTag'">
+							<p :class="'TripleSet'">{{r[0]}} | {{r[1]}} | {{r[2]}}</p>
+							<el-button :icon="Delete" circle size="small" :class="'SetDeleteButton'"></el-button>
+						</div> -->
+						<el-tag v-for="r in ShowTag" 
+						:class="'relationTag'" type="info" closable 
+						:key="r" @close="closeTag(r)">
+							{{r}}
+						</el-tag>
+						<el-button plain :icon="Plus" :class="'relationTag'"></el-button>
+					</div>
+					<div :class="'SenText'">
+						<el-skeleton :rows="2" v-if="sen.Text==''" animated ></el-skeleton>
+						<el-input v-else v-model="ShowText" 
+						type="textarea" autosize></el-input>
+					</div>
+				</div>
 				</el-collapse-item>
 		</el-collapse>
 		<div :class="'buttonSlip'">
@@ -32,6 +50,7 @@
 			<el-button plain :icon="CopyDocument" :class="'copyButton'">Copy all sentences</el-button>
 		</div>
 	</div>
+	
 </template>
 
 <script setup>
@@ -106,7 +125,7 @@ function closeTag(tag){
 </script>
 
 <style>
-	.relationBox{
+	.relationTag{
 		display: flex;
 		text-align: center;
 		/* Set */
@@ -370,4 +389,68 @@ function closeTag(tag){
 
 	}
 
+	.omittedRelat{
+		/* relation tripes */
+		
+		box-sizing: border-box;
+		overflow: hidden;
+		
+		/* Auto layout */
+		display: flex;
+		flex-direction: row;
+		align-items: flex-start;
+		padding: 21px 4px;
+		gap: 10px;
+		
+		width: 45%;
+		height: 70px;
+		
+		border: 1px solid #D6D5D5;
+		border-radius: 4px;
+		
+		/* Inside auto layout */
+		flex: none;
+		order: 0;
+		align-self: stretch;
+		flex-grow: 1;
+	}
+
+	.omittedBox{
+		/* sentence 1 (el-collapse) */
+		
+		box-sizing: border-box;
+		
+		/* Auto layout */
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding: 10px 11px;
+		gap: 10px;
+		
+		width: calc((100%)*2);
+		height: 90px;
+		
+		border: 1px solid #525252;
+		border-radius: 15px;
+		
+		/* Inside auto layout */
+		flex: none;
+		order: 0;
+		flex-grow: 0;
+
+	}
+
+	.omittedText{
+		/* sentence(loading) */
+		
+		width: 45%;
+		height: 70px;
+		
+		
+		/* Inside auto layout */
+		flex: none;
+		order: 1;
+		flex-grow: 0;
+
+	}
 </style>
