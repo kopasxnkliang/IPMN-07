@@ -27,12 +27,16 @@
 					</div>
 				</el-collapse-item>
 		</el-collapse>
+		<div :class="'buttonSlip'">
+			<el-button plain :icon="Plus" :class="'addButton'">Add a sentence</el-button>
+			<el-button plain :icon="CopyDocument" :class="'copyButton'">Copy all sentences</el-button>
+		</div>
 	</div>
 </template>
 
 <script setup>
 // import { defineComponent } from "vue";
-import {Delete, Plus} from '@element-plus/icons-vue'
+import {Delete, Plus, CopyDocument} from '@element-plus/icons-vue'
 import { ref } from 'vue';
 
 const baseID = 1200
@@ -265,4 +269,105 @@ function closeTag(tag){
 		flex-grow: 0;
 		
 	}
+
+	.buttonSlip{
+		/* Button slip */
+		
+		/* Auto layout */
+		display: flex;
+		flex-direction: row;
+		align-items: center;
+		padding: 0px;
+		gap: 10px;
+		
+		width: 1209px;
+		height: 65px;
+		
+		
+		/* Inside auto layout */
+		flex: none;
+		order: 2;
+		align-self: stretch;
+		flex-grow: 0;
+	}
+
+	.addButton{
+		/* Add button */
+		
+		box-sizing: border-box;
+		
+		/* Auto layout */
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 3px 0px;
+		
+/* 		width: 1012px;
+		height: 65px; */
+		width: 80%;
+		height: 100%;
+		
+		border: 1px solid #000000;
+		border-radius: 10px;
+		
+		/* Inside auto layout */
+		flex: none;
+		order: 0;
+		flex-grow: 1;		
+		
+			
+		/* Add a sentence */
+		
+		font-family: 'Inter';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 15px;
+		line-height: 18px;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		
+		color: #000000;
+
+	}
+
+	.copyButton{
+		/* Copy button */
+		
+		box-sizing: border-box;
+		
+		/* Auto layout */
+		display: flex;
+		flex-direction: row;
+		justify-content: center;
+		align-items: center;
+		padding: 3px 0px;
+		
+		width: 15%;
+		height: 100%;
+		
+		border: 1px solid #000000;
+		border-radius: 10px;
+		
+		/* Inside auto layout */
+		flex: none;
+		order: 1;
+		flex-grow: 0;
+		
+		/* Copy all sentences */
+		
+		font-family: 'Inter';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 15px;
+		line-height: 18px;
+		display: flex;
+		align-items: center;
+		text-align: center;
+		
+		color: #000000;
+
+	}
+
 </style>
