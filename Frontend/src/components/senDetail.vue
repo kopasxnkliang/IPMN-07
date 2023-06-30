@@ -1,6 +1,6 @@
 <template>
-	<div >
-		<el-collapse v-model="activeSentence" accordion  >
+	<div :class="'bodyBox'">
+		<el-collapse v-model="activeSentence" accordion :class="'collapseBox'" >
 				<el-collapse-item v-for="(sen, index) in Sentences" 
 				v-bind:name="sen.ID" :class="'sentenceBox'">
 				<template #title v-if="activeSentence==sen.ID">
@@ -276,6 +276,19 @@ function generateSenClick(idx){
 </script>
 
 <style>
+	
+	.bodyBox{
+		margin: auto;
+		max-width: 80%;
+		display: grid;
+		gap: 8px;
+	}
+	
+	.collapseBox{
+		display: grid;
+		gap: 8px;
+	}
+	
 	.relationTag{
 		display: flex;
 		text-align: center;
@@ -428,7 +441,7 @@ function generateSenClick(idx){
 		padding: 10px 11px;
 		
 		width: 1209px;
-		height: 206px;
+		/* height: 206px; */
 		
 		border: 1px solid #525252;
 		border-radius: 15px;
@@ -581,8 +594,8 @@ function generateSenClick(idx){
 		width: calc((100%)*2);
 		height: 90px;
 		
-		border: 1px solid #525252;
-		border-radius: 15px;
+/* 		border: 1px solid #525252;
+		border-radius: 15px; */
 		
 		/* Inside auto layout */
 		flex: none;
