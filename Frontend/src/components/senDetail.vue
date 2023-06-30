@@ -1,13 +1,12 @@
 <template>
 	<!-- <h1>{{Sentences}}</h1> -->
 	<div >
-		<el-collapse v-model="activeSentence" accordion @change="changeCollapse" >
+		<el-collapse v-model="activeSentence" accordion  >
 				<el-collapse-item v-for="(sen, index) in Sentences" 
-				
 				v-bind:name="sen.ID" :class="'sentenceBox'">
 				<template #title v-if="activeSentence==sen.ID">
 					<div :class="'titleBox'">
-						<p>Sentence {{index+1}}</p>
+						<p>Sentence {{index+1}} Detail</p>
 						<div>
 							<!-- <el-button ></el-button>
 							<el-button plain :icon="CopyDocument" :class="'copyButton'"
@@ -23,9 +22,9 @@
 										<el-button type="info" :icon="CopyDocument" 
 										@click.stop="clipSmallClick"/>
 									</el-tooltip>
-									<el-tooltip effect="dark" content="Regenerate this sentence">
+									<el-tooltip effect="dark" content="Generate this sentence">
 										<el-button type="info" :icon="Refresh" 
-										:loading="curSenLoading"/>
+										:loading="sen.senLoading" @click.stop="generateSenClick"/>
 									</el-tooltip>
 								</div>
 						</div>
@@ -41,7 +40,7 @@
 							</el-tag>
 						</div>
 						<div :class="'omittedText'">
-							<el-skeleton :rows="0" v-if="sen.Text==''" animated ></el-skeleton>
+							<el-skeleton :rows="0" v-if="sen.senLoading || sen.Text==''" animated ></el-skeleton>
 							<p v-else>{{sen.Text}}</p>
 						</div>
 					</div>
@@ -49,7 +48,7 @@
 				</template>
 				<div :class="'SentenceBody'">
 					<div :class="'relation'">
-						<el-tag v-for="r in ShowTag" 
+						<el-tag v-for="r in sen.Relation" 
 						:class="'relationTag'" type="info" closable 
 						:key="r" @close="closeTag(r)">
 							{{r}}
@@ -58,8 +57,8 @@
 						:class="'relationTag'" @click="formVisible=true"></el-button>
 					</div>
 					<div :class="'SenText'">
-						<el-skeleton :rows="2" v-if="sen.Text==''" animated ></el-skeleton>
-						<el-input v-else v-model="ShowText" 
+						<el-skeleton :rows="2" v-if="sen.senLoading || sen.Text==''" animated ></el-skeleton>
+						<el-input v-else v-model="sen.Text" 
 						type="textarea" autosize></el-input>
 					</div>
 				</div>
@@ -100,23 +99,28 @@ import useClipboard from "vue-clipboard3";
 import {Delete, Plus, CopyDocument,Check,Close,Refresh} from '@element-plus/icons-vue'
 import { ref,onMounted } from 'vue';
 import {ElMessage } from 'element-plus' 
+import axios from "axios";
 
 const baseID = 1200
 
 let activeSentence = ref(-1)
-let lastSelectSen = -1
+// let lastSelectSen = -1
 
-let ShowText = ref('')
-let ShowTag = ref([])
+// let ShowText = ref('')
+// let ShowTag = ref([])
 let tripleSet1 = ref('')
 let tripleSet2 = ref('')
 let tripleSet3 = ref('')
-let curSenLoading = ref(false)
+// let curSenLoading = ref(false)
 let count = 5
 
 const recommends = ["main subject",'follow','have part', 'participant','location']
 const recommendRelation = ref([])
 let formVisible = ref(false)
+
+const serverIP = "/api/hello"
+
+let Sentences = ref([])
 
 function constructRecom(){
 	let ret = []
@@ -125,72 +129,98 @@ function constructRecom(){
 	}
 	return ret
 }
-onMounted(()=>{
-	recommendRelation.value = constructRecom()
-})
 
-let Sentences = [{
+function constructSenTest(){
+	return [{
 			ID:baseID+1,
 			Relation: ["1 | 2 | 3", "4 | 5 | 6", "7 | 8 | 9", "10 | 11 | 12","13 | 14 | 15","16 | 17 | 18","19 | 20 | 21"],
 			// Text: "This is the text data1"
 			Text: '',
-			senLoading:ref(false)
+			senLoading:false
 		},{
 			ID:baseID+2,
 			Relation: ["7 | 8 | 9","10 | 11 | 12"],
 			Text: "This is the text data2",
-			senLoading:ref(true)
+			senLoading:false
 		}]
+}
 
-// Sentences = [1,2,3]
+onMounted(()=>{
+	recommendRelation.value = constructRecom()
+	Sentences.value = constructSenTest()
+})
+
+// let Sentences = [{
+// 			ID:baseID+1,
+// 			Relation: ["1 | 2 | 3", "4 | 5 | 6", "7 | 8 | 9", "10 | 11 | 12","13 | 14 | 15","16 | 17 | 18","19 | 20 | 21"],
+// 			// Text: "This is the text data1"
+// 			Text: '',
+// 			senLoading:ref(false)
+// 		},{
+// 			ID:baseID+2,
+// 			Relation: ["7 | 8 | 9","10 | 11 | 12"],
+// 			Text: "This is the text data2",
+// 			senLoading:ref(true)
+// 		}]
+
+// // Sentences = [1,2,3]
+
+
 
 function findSen(idx){
-	for (var i=0; i<Sentences.length; i++){
-		if (Sentences[i].ID == idx){
+	for (var i=0; i<Sentences.value.length; i++){
+		if (Sentences.value[i].ID == idx){
 			return i
 		}
 	}
 	return -1
 }
 
-// 在折叠面板中的输入框内修改, 切换后同步更新
-function changeCollapse(){
-	// window.console.error("inp",inp)
-	// window.console.error("activeSentence",activeSentence)
-	if (lastSelectSen==-1){
-		let id = findSen(activeSentence.value)
-		if (id==-1){
-			return
-		}
-		// window.console.error(activeSentence.value,baseID,activeSentence.value - baseID)
-		ShowText.value = Sentences[id].Text
-		ShowTag.value = Sentences[id].Relation
-		curSenLoading.value = Sentences[id].senLoading
-		curSenLoading.value=false
-		// window.console.error(ShowText.value)
-		lastSelectSen = activeSentence.value
-	} else{
-		var lastSenid = findSen(lastSelectSen)
-		var curid = findSen(activeSentence.value)
-		if (lastSenid==-1 || curid==-1){
-			return
-		}
-		Sentences[lastSenid].Text = ShowText.value
-		Sentences[lastSenid].Relation = ShowTag.value
-		ShowTag.value = Sentences[curid].Relation
-		ShowText.value = Sentences[curid].Text
-		curSenLoading.value = Sentences[curid].senLoading
-		lastSelectSen = activeSentence.value
-	}
-	// // alert(this)
-	// window.console.error(this)
+// // 在折叠面板中的输入框内修改, 切换后同步更新
+// function changeCollapse(){
+// 	// window.console.error("inp",inp)
+// 	// window.console.error("activeSentence",activeSentence)
+// 	if (lastSelectSen==-1){
+// 		let id = findSen(activeSentence.value)
+// 		if (id==-1){
+// 			return
+// 		}
+// 		// window.console.error(activeSentence.value,baseID,activeSentence.value - baseID)
+// 		ShowText.value = Sentences[id].Text
+// 		ShowTag.value = Sentences[id].Relation
+// 		curSenLoading.value = Sentences[id].senLoading.value
+// 		curSenLoading.value=false
+// 		// window.console.error(ShowText.value)
+// 		lastSelectSen = activeSentence.value
+// 	} else{
+// 		var lastSenid = findSen(lastSelectSen)
+// 		var curid = findSen(activeSentence.value)
+// 		if (lastSenid==-1 || curid==-1){
+// 			return
+// 		}
+// 		Sentences[lastSenid].Text = ShowText.value
+// 		Sentences[lastSenid].Relation = ShowTag.value
+// 		ShowTag.value = Sentences[curid].Relation
+// 		ShowText.value = Sentences[curid].Text
+// 		curSenLoading.value = Sentences[curid].senLoading.value
+// 		lastSelectSen = activeSentence.value
+// 	}
+// 	// // alert(this)
+// 	// window.console.error(this)
 	
-}
+// }
 
 // 删除三元组Tag
 function closeTag(tag){
-	window.console.error(tag, ShowTag.value.indexOf(tag))
-	ShowTag.value.splice(ShowTag.value.indexOf(tag),1)
+	// window.console.error(tag, ShowTag.value.indexOf(tag))
+	// ShowTag.value.splice(ShowTag.value.indexOf(tag),1)
+	var curid = findSen(activeSentence.value)
+	if (curid ==-1 ){
+		return
+	}
+	// console.error(Sentences.value[curid].Relation)
+	Sentences.value[curid].Relation.splice(Sentences.value[curid].Relation.indexOf(tag),1)
+	// console.error(Sentences.value[curid].Relation)
 }
 
 // createFilter/querySearch 对el-autocomplete进行搜索
@@ -215,7 +245,9 @@ function SaveButtonClick(){
 		return
 	}
 	var tripleSet = tripleSet1.value+' | '+tripleSet2.value+' | '+tripleSet3.value
-	ShowTag.value.push(tripleSet)
+	var curid = findSen(activeSentence.value)
+	
+	Sentences.value[curid].Relation.push(tripleSet)
 	tripleSet1.value = ""
 	tripleSet2.value = ""
 	tripleSet3.value = ""
@@ -230,27 +262,27 @@ function cancelButtonClick(){
 }
 
 function addsenButtonClick(){
-	var curid = findSen(activeSentence.value) 
-	if (curid!=-1){
-		Sentences[curid].Text = ShowText.value
-		Sentences[curid].Relation = ShowTag.value
-	}
+	// var curid = findSen(activeSentence.value) 
+	// if (curid!=-1){
+	// 	Sentences[curid].Text = ShowText.value
+	// 	Sentences[curid].Relation = ShowTag.value
+	// }
 	
 	count++
 	var newid = baseID + count
-	Sentences.push({
+	Sentences.value.push({
 		ID: newid,
 		Relation:[],
 		Text:'',
-		senLoading:ref(false)
+		senLoading:false
 	})
-	var nextid = findSen(newid) 
+	// var nextid = findSen(newid) 
 	
-	activeSentence.value = newid
-	ShowTag.value = Sentences[nextid].Relation
-	ShowText.value = Sentences[nextid].Text
-	curSenLoading.value = false
-	lastSelectSen = -1
+	// activeSentence.value = newid
+	// ShowTag.value = Sentences[nextid].Relation
+	// ShowText.value = Sentences[nextid].Text
+	// curSenLoading.value = false
+	// lastSelectSen = -1
 }
 
 async function clipText(text){
@@ -264,14 +296,14 @@ async function clipText(text){
 }
 
 function clipBigClick(){
-	var curid = findSen(activeSentence.value)
-	if (curid!=-1){
-		Sentences[curid].Text = ShowText.value
-		Sentences[curid].Relation = ShowTag.value
-	}
-	ShowTag.value = []
-	ShowText.value = ""
-	curSenLoading.value = false
+	// var curid = findSen(activeSentence.value)
+	// if (curid!=-1){
+	// 	Sentences[curid].Text = ShowText.value
+	// 	Sentences[curid].Relation = ShowTag.value
+	// }
+	// ShowTag.value = []
+	// ShowText.value = ""
+	// curSenLoading.value = false
 	var text = new String
 	for (var i=0;i<Sentences.length;i++){
 		text += Sentences[i].Text
@@ -280,7 +312,8 @@ function clipBigClick(){
 }
 
 function clipSmallClick(){
-	clipText(ShowText.value)
+	var curid = findSen(activeSentence.value)
+	clipText(Sentences.value[i].Text)
 }
 
 function deleteSenClick(){
@@ -288,13 +321,57 @@ function deleteSenClick(){
 	if (curid==-1){
 		return
 	}
-	Sentences.splice(curid,1)
-	ShowTag.value = []
-	ShowText.value = ""
-	curSenLoading.value = false
+	Sentences.value.splice(curid,1)
+	// ShowTag.value = []
+	// ShowText.value = ""
+	// curSenLoading.value = false
 	activeSentence.value = -1
-	lastSelectSen = -1
+	// lastSelectSen = -1
 }
+
+function generateSenClick(idx){
+	// 1. get cur id
+	var curid = findSen(activeSentence.value)
+	// if (curid!=-1){
+	// 	Sentences.value[curid].Text = ShowText.value
+	// 	Sentences[curid].Relation = ShowTag.value
+	// }
+	// lastSelectSen = -1
+	
+	// 2. generate post data
+	const postData = {
+		ID: Sentences.value[curid].ID,
+		Relation: Sentences.value[curid].Relation
+	}
+	
+	// 3. set loading state
+	Sentences.value[curid].senLoading = true
+	// curSenLoading.value = true
+	
+	// 4. send request
+	axios.post(serverIP,postData)
+		 .then(function(response){
+			 console.log(response.data)
+			 // if success
+			 console.log(response.data.Text)
+			 let id = findSen(response.data.ID)
+			 if (id == -1){
+				 return
+			 }
+			 Sentences.value[id].Text = response.data.Text
+			 Sentences.value[id].senLoading = false
+			 // if (Sentences[id].ID == activeSentence.value){
+				//  ShowText.value = response.data.Text
+				//  curSenLoading.value = false
+			 // }
+		 })
+		 .catch(function(error){
+			 console.error(error)
+		 })
+}
+
+
+
 </script>
 
 <style>
