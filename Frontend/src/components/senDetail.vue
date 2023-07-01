@@ -5,28 +5,26 @@
 				v-bind:name="sen.ID" :class="'sentenceBox'">
 				<template #title v-if="activeSentence==sen.ID">
 					<div :class="'titleBox'">
-						<p>Sentence {{index+1}} Detail</p>
-						<div>
-						
-								<div style="display: flex;">
-									<el-tooltip effect="dark" content="Delete this sentence">
-										<el-button type="info" :icon="Delete" 
-										@click.stop="deleteSenClick"/>
-									</el-tooltip>
-									<el-tooltip effect="dark" content="Copy this sentence">
-										<el-button type="info" :icon="CopyDocument" 
-										@click.stop="clipSmallClick"/>
-									</el-tooltip>
-									<el-tooltip effect="dark" content="Generate this sentence">
-										<el-button type="info" :icon="Refresh" 
-										:loading="sen.senLoading" @click.stop="generateSenClick"/>
-									</el-tooltip>
-								</div>
+						<h2 style="display: contents;">Sentence {{index+1}} Detail</h2>
+						<div :class="'detailButBox'">	
+							<el-tooltip effect="dark" content="Delete this sentence">
+								<el-button type="info" :icon="Delete" 
+								@click.stop="deleteSenClick"/>
+							</el-tooltip>
+							<el-tooltip effect="dark" content="Copy this sentence" >
+								<el-button type="info" :icon="CopyDocument" 
+								@click.stop="clipSmallClick" style="margin-left: 5px;"/>
+							</el-tooltip>
+							<el-tooltip effect="dark" content="Generate this sentence" >
+								<el-button type="info" :icon="Refresh" 
+								:loading="sen.senLoading" @click.stop="generateSenClick" 
+								style="margin-left: 5px;"/>
+							</el-tooltip>
 						</div>
 					</div>
 					
 				</template>
-				<template #title v-else >
+				<template #title v-else  >
 					<div :class="'omittedBox'">
 						<div :class="'omittedRelat'">
 							<el-tag v-for="r in sen.Relation" 
@@ -54,7 +52,7 @@
 					<div :class="'SenText'">
 						<el-skeleton :rows="2" v-if="sen.senLoading || sen.Text==''" animated ></el-skeleton>
 						<el-input v-else v-model="sen.Text" 
-						type="textarea" autosize></el-input>
+						type="textarea"  :autosize="{ minRows: 5 }"></el-input>
 					</div>
 				</div>
 				</el-collapse-item>
@@ -370,8 +368,9 @@ function generateSenClick(idx){
 		padding: 4px;
 		gap: 10px;
 		
-		width: 578.5px;
-		height: 111px;
+		width: 45%	;
+		height: fit-content;
+		min-height: 115px;
 		
 		border: 1px solid #D6D5D5;
 		border-radius: 4px;
@@ -390,11 +389,10 @@ function generateSenClick(idx){
 		flex-direction: row;
 		align-items: flex-start;
 		padding: 10px;
+		padding-bottom: 0px;
 		gap: 10px;
 		
-		width: 1187px;
-		height: 131px;
-		
+		min-height: 130px;
 		
 		/* Inside auto layout */
 		flex: none;
@@ -415,11 +413,12 @@ function generateSenClick(idx){
 		padding: 0px 4px;
 		gap: 10px;
 		
-		width: 578.5px;
-		height: 111px;
+		width: 45%;
+		height: fit-content;
+		min-height: 115px;
 		
-		border: 1px solid #D6D5C5;
-		border-radius: 4px;
+/* 		border: 1px solid #D6D5C5;
+		border-radius: 4px; */
 		
 		/* Inside auto layout */
 		flex: none;
@@ -461,9 +460,8 @@ function generateSenClick(idx){
 		flex-direction: row;
 		align-items: center;
 		padding: 0px;
-		gap: 10px;
 		
-		width: 1209px;
+		width: 100%;
 		height: 65px;
 		
 		
@@ -563,11 +561,13 @@ function generateSenClick(idx){
 		display: flex;
 		flex-direction: row;
 		align-items: flex-start;
-		padding: 21px 4px;
-		gap: 10px;
+		align-items: center;
+		padding: 0px 4px;
+		gap: 15px;
+		margin-right: 20px;
 		
 		width: 45%;
-		height: 70px;
+		height: 100%;
 		
 		border: 1px solid #D6D5D5;
 		border-radius: 4px;
@@ -588,11 +588,11 @@ function generateSenClick(idx){
 		display: flex;
 		flex-direction: row;
 		align-items: center;
-		padding: 10px 11px;
+		/* padding: 10px 11px; */
 		gap: 10px;
 		
-		width: calc((100%)*2);
-		height: 90px;
+		width: calc(100% - 21px);
+		height: 100%;
 		
 /* 		border: 1px solid #525252;
 		border-radius: 15px; */
@@ -607,15 +607,17 @@ function generateSenClick(idx){
 	.omittedText{
 		/* sentence(loading) */
 		
-		width: 45%;
-		height: 70px;
-		
+		width: 50%;		
 		
 		/* Inside auto layout */
 		flex: none;
 		order: 1;
 		flex-grow: 0;
-
+		
+		font-family: 'Inter';
+		font-style: normal;
+		font-weight: 400;
+		font-size: 13px;
 	}
 
 	.inputBox{
@@ -636,5 +638,38 @@ function generateSenClick(idx){
 
 	.titleBox{
 		display: flex;
+		flex-grow: 1;
+		justify-content: space-between;
+		height: 100%;
+		padding-left: 10px;
 	}
+	
+	[role="tab"]{
+		width: 100%;
+	}
+	
+	[role="button"]{
+		border-bottom: 0px;
+	}
+	
+	.el-collapse-head-6598{
+		width: 100%;
+	}
+	
+	.detailButBox{
+		display: flex;
+		align-content: center;
+		flex-direction: row;
+		align-items: center;
+		margin-right: 10px;
+	}
+	
+	.el-collapse-item__content{
+		padding-bottom: 15px;
+	}
+	
+	.el-collapse-item__wrap{
+		width: 100%;
+	}
+
 </style>
