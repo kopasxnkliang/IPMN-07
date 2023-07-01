@@ -46,8 +46,26 @@
 						:key="r" @close="closeTag(r)">
 							{{r}}
 						</el-tag>
+						<div :class="'inputTriple'" v-if="formVisible" style="font-size: 12px;">
+							
+							<el-input v-model="tripleSet1" size="small" :style="{width:calTextLen(tripleSet1,50)}"
+							placeholder="Word1" clearable :class="'input'" autosize></el-input>
+							
+							<el-autocomplete v-model="tripleSet2"
+							:style="{width:calTextLen(tripleSet2,65)}"
+							:fetch-suggestions="querySearch" style="margin-left: 2px;;"
+							clearable placeholder="Relation" :class="'input'" size="small"
+							></el-autocomplete>
+							<el-input v-model="tripleSet3" style="margin-left: 2px;"
+							:style="{width:calTextLen(tripleSet3,50)}"
+							placeholder="Word2" clearable :class="'input'" size="small"></el-input>
+							<el-button type="info" circle style="margin-left: 12px;"
+							@click="cancelButtonClick" :icon="Close" size="small"></el-button>
+							<el-button type="info" circle style="margin-left: 2px;"
+							@click="SaveButtonClick" :icon="Check" size="small"></el-button>
+						</div>
 						<el-button plain :icon="Plus" 
-						:class="'relationTag'" @click="formVisible=true"></el-button>
+						:class="'relationTag'" @click="formVisible=true" v-else></el-button>
 					</div>
 					<div :class="'SenText'">
 						<el-skeleton :rows="2" v-if="sen.senLoading || sen.Text==''" animated ></el-skeleton>
@@ -65,7 +83,7 @@
 		</div>
 	</div>
 	
-	<el-dialog v-model="formVisible" title="Add a Triple Set">
+<!-- 	<el-dialog v-model="formVisible" title="Add a Triple Set">
 		<div :class="'inputBox'">
 			<el-input v-model="tripleSet1" 
 			placeholder="Word1" clearable :class="'input'"></el-input>
@@ -83,7 +101,7 @@
 			<el-button type="success" round 
 			@click="SaveButtonClick" :icon="Check">Confirm</el-button>
 		</div>
-	</el-dialog>
+	</el-dialog> -->
 </template>
 
 <script setup>
@@ -203,6 +221,7 @@ function addsenButtonClick(){
 		Text:'',
 		senLoading:false
 	})
+	activeSentence.value = newid
 }
 
 async function clipText(text){
@@ -253,9 +272,9 @@ function generateSenClick(idx){
 	// 4. send request
 	axios.post(serverIP,postData)
 		 .then(function(response){
-			 console.log(response.data)
+			 // console.log(response.data)
 			 // if success
-			 console.log(response.data.Text)
+			 // console.log(response.data.Text)
 			 let id = findSen(response.data.ID)
 			 if (id == -1){
 				 return
@@ -269,6 +288,23 @@ function generateSenClick(idx){
 		 })
 }
 
+function calTextLen(src, defal){
+	// console.error(src)
+	if (src.length == 0){
+		return defal+'px'
+	}
+	var width = 0;
+	var html = document.createElement('span');
+	html.innerText = src;
+	html.className = 'getTextWidth';
+	html.style = "font-size: 12px;"
+	document.querySelector('body').appendChild(html);
+	width = document.querySelector('.getTextWidth').offsetWidth;
+	document.querySelector('.getTextWidth').remove();
+	// console.error(width)
+	return width+36+'px';
+
+}
 
 
 </script>
@@ -672,4 +708,20 @@ function generateSenClick(idx){
 		width: 100%;
 	}
 
+	.inputTriple{
+		font-size: 12px;
+		display: flex;
+		max-width: 50%;
+		max-width: 100%;
+		height: auto;
+		min-height: 29px;
+		width: auto;
+		flex-direction: row;
+		justify-content: space-evenly;
+		align-items: center;
+		padding: 0px 4px;
+		border: 1px solid #000000;
+		border-radius: 4px;
+		background-color: rgb(244, 244, 245);
+	}
 </style>
