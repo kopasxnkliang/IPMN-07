@@ -43,7 +43,7 @@
 					<div :class="'relation'">
 						<el-tag v-for="r in sen.Relation" 
 						:class="'relationTag'" type="info" closable 
-						:key="r" @close="closeTag(r)">
+						:key="r" @close="closeTag(r)" @click="tagClick(r)">
 							{{r}}
 						</el-tag>
 						<div :class="'inputTriple'" v-if="formVisible" style="font-size: 12px;">
@@ -60,7 +60,7 @@
 							:style="{width:calTextLen(tripleSet3,50)}"
 							placeholder="Word2" clearable :class="'input'" size="small"></el-input>
 							<el-button type="info" circle style="margin-left: 12px;"
-							@click="cancelButtonClick" :icon="Close" size="small"></el-button>
+							@click="cancelButtonClick()" :icon="Close" size="small"></el-button>
 							<el-button type="info" circle style="margin-left: 2px;"
 							@click="SaveButtonClick" :icon="Check" size="small"></el-button>
 						</div>
@@ -83,9 +83,9 @@
 		</div>
 	</div>
 	
-<!-- 	<el-dialog v-model="formVisible" title="Add a Triple Set">
+ 	<el-dialog v-model="changeFormVisible" title="Modify Triple Set" :show-close="false">
 		<div :class="'inputBox'">
-			<el-input v-model="tripleSet1" 
+			<el-input v-model="tripleSet1"
 			placeholder="Word1" clearable :class="'input'"></el-input>
 			<el-autocomplete v-model="tripleSet2"
 			:fetch-suggestions="querySearch"
@@ -96,12 +96,12 @@
 		</div>
 
 		<div :class="'formButton'">
-			<el-button type="danger" round 
-			@click="cancelButtonClick" :icon="Close">Cancel</el-button>
-			<el-button type="success" round 
-			@click="SaveButtonClick" :icon="Check">Confirm</el-button>
+			<el-button type="danger" round
+			@click="tagCancelButtonClick" :icon="Close">Cancel</el-button>
+			<el-button type="success" round
+			@click="tagChangeButtonClick" :icon="Check">Change</el-button>
 		</div>
-	</el-dialog> -->
+	</el-dialog>
 </template>
 
 <script setup>
@@ -118,11 +118,13 @@ let activeSentence = ref(-1)
 let tripleSet1 = ref('')
 let tripleSet2 = ref('')
 let tripleSet3 = ref('')
+let tmpTripleSet = ref('')
 let count = 5
 
 const recommends = ["main subject",'follow','have part', 'participant','location']
 const recommendRelation = ref([])
 let formVisible = ref(false)
+let changeFormVisible = ref(false)
 
 const serverIP = "/api/hello"
 
@@ -188,6 +190,39 @@ const querySearch = (queryString, cb) => {
 	? recommendRelation.value.filter(createFilter(queryString))
 	:recommendRelation.value
 	cb(results)
+}
+
+function tagClick(tag){
+  tmpTripleSet = tag.valueOf()
+  const tripleSet = tag.valueOf().split(" | ")
+  tripleSet1.value = tripleSet[0]
+  tripleSet2.value = tripleSet[1]
+  tripleSet3.value = tripleSet[2]
+  changeFormVisible.value = true
+}
+
+function tagChangeButtonClick(){
+  if (tripleSet1.value === "" || tripleSet2.value === "" || tripleSet3.value === ""){
+    tagCancelButtonClick()
+    return
+  }
+  var tripleSet = tripleSet1.value+' | '+tripleSet2.value+' | '+tripleSet3.value
+  var curid = findSen(activeSentence.value)
+
+  Sentences.value[curid].Relation[Sentences.value[curid].Relation.indexOf(tmpTripleSet)] = tripleSet
+  changeFormVisible.value = false
+  tripleSet1.value = ""
+  tripleSet2.value = ""
+  tripleSet3.value = ""
+  tmpTripleSet.value = ""
+
+}
+
+function tagCancelButtonClick(){
+  tripleSet1.value = ""
+  tripleSet2.value = ""
+  tripleSet3.value = ""
+  changeFormVisible.value = false
 }
 
 function SaveButtonClick(){
