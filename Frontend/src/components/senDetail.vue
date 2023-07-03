@@ -60,7 +60,7 @@
 							:style="{width:calTextLen(tripleSet3,50)}"
 							placeholder="Word2" clearable :class="'input'" size="small"></el-input>
 							<el-button type="info" circle style="margin-left: 12px;"
-							@click="cancelButtonClick()" :icon="Close" size="small"></el-button>
+							@click="cancelButtonClick" :icon="Close" size="small"></el-button>
 							<el-button type="info" circle style="margin-left: 2px;"
 							@click="SaveButtonClick" :icon="Check" size="small"></el-button>
 						</div>
@@ -746,7 +746,13 @@ function calTextLen(src, defal){
 	.inputTriple{
 		font-size: 12px;
 		display: flex;
-		max-width: 50%;
+		
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-content: center;
+		justify-content: flex-start;
+		align-items: stretch;
+		
 		max-width: 100%;
 		height: auto;
 		min-height: 29px;
