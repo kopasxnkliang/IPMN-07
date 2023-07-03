@@ -64,9 +64,28 @@
 							<el-button type="info" circle style="margin-left: 2px;"
 							@click="SaveButtonClick" :icon="Check" size="small"></el-button>
 						</div>
+            <div :class="'inputTriple'" v-if="changeFormVisible" style="font-size: 12px;">
+
+              <el-input v-model="tripleSet1" size="small" :style="{width:calTextLen(tripleSet1,50)}"
+                        placeholder="Word1" clearable :class="'input'" autosize></el-input>
+
+              <el-autocomplete v-model="tripleSet2"
+                               :style="{width:calTextLen(tripleSet2,65)}"
+                               :fetch-suggestions="querySearch" style="margin-left: 2px;;"
+                               clearable placeholder="Relation" :class="'input'" size="small"
+              ></el-autocomplete>
+              <el-input v-model="tripleSet3" style="margin-left: 2px;"
+                        :style="{width:calTextLen(tripleSet3,50)}"
+                        placeholder="Word2" clearable :class="'input'" size="small"></el-input>
+              <el-button type="info" circle style="margin-left: 12px;"
+                         @click="tagCancelButtonClick" :icon="Close" size="small"></el-button>
+              <el-button type="info" circle style="margin-left: 2px;"
+                         @click="tagChangeButtonClick" :icon="Check" size="small"></el-button>
+            </div>
 						<el-button plain :icon="Plus" 
 						:class="'relationTag'" @click="formVisible=true" v-else></el-button>
 					</div>
+
 					<div :class="'SenText'">
 						<el-skeleton :rows="2" v-if="sen.senLoading || sen.Text==''" animated ></el-skeleton>
 						<el-input v-else v-model="sen.Text" 
@@ -82,26 +101,6 @@
 			@click="clipBigClick">Copy all sentences</el-button>
 		</div>
 	</div>
-	
- 	<el-dialog v-model="changeFormVisible" title="Modify Triple Set" :show-close="false">
-		<div :class="'inputBox'">
-			<el-input v-model="tripleSet1"
-			placeholder="Word1" clearable :class="'input'"></el-input>
-			<el-autocomplete v-model="tripleSet2"
-			:fetch-suggestions="querySearch"
-			clearable placeholder="Relation" :class="'input'"
-			></el-autocomplete>
-			<el-input v-model="tripleSet3"
-			placeholder="Word2" clearable :class="'input'"></el-input>
-		</div>
-
-		<div :class="'formButton'">
-			<el-button type="danger" round
-			@click="tagCancelButtonClick" :icon="Close">Cancel</el-button>
-			<el-button type="success" round
-			@click="tagChangeButtonClick" :icon="Check">Change</el-button>
-		</div>
-	</el-dialog>
 </template>
 
 <script setup>
