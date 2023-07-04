@@ -125,7 +125,7 @@ const recommendRelation = ref([])
 let formVisible = ref(false)
 let changeFormVisible = ref(false)
 
-const serverIP = "/api/hello"
+const serverIP = "/api/example"
 
 let Sentences = ref([])
 
