@@ -58,9 +58,24 @@ def main():
     # Most of the funds were used to open a new account for Company A
 
     # Ken made $200,000 in illegal proceeds from smuggling tobacco. 
-    # ['Prosecutors alleged that Ken was involved in a crime action involving illegal proceeds from smuggling tobacco into the United States.']
-    sen_5 = 'Ken | main subject | prosecutors [SEP] $200,000 | main subject | illegal proceeds [SEP] smuggling tobacco | main subject | crime action'
-    testing(sen_5)
+    # ['Ken was a criminal suspect in a crime action that netted $200,000 in illegal proceeds from smuggling tobacco.']
+    sen_5 = 'Ken | member of | criminal suspect [SEP] $200,000 | main subject | illegal proceeds [SEP] smuggling tobacco | main subject | crime action'
+    
+    # Bob use offshore accounts and shell companies to avoid paying taxes
+    # ['The use of offshore accounts and shell companies is one of the most common methods of tax evasion and crime action.']
+    sen_6 = 'tax evasion | main subject | crime action [SEP] shell companies | main subject | crime method [SEP] offshore accounts | main subject | crime method'
+    
+    # Jim uses a third-party company to launder illicit funds 
+    # ['A third-party company (also known as a "third party" or "third-party" company) is a type of criminal organization that is involved in illicit funds laundering.']
+    sen_7 = 'third-party company | main subject | crime action [SEP] illicit funds laundering | main subject | purpose'
+
+    # Ken bought Bitcoins to launder illicit proceeds from drug smuggling
+    # ['Flower Bank is a crime body that uses bitcoin as a digital asset for the purpose of illicit proceeds laundering.']
+    sen_8 = 'Flower Bank | instance of | crime body [SEP] Bitcoin | available for purchase | digital assets [SEP] illicit proceeds laundering | has part | crime purpose'
+
+    testing(sen_8)
+
+
     # input_file = "./test.src"
     # output_file = "./generation.txt"
     # generate_sentences(input_file, output_file)
