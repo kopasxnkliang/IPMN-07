@@ -45,7 +45,7 @@ class MVP:
     def __init__(self):
         self.config = Config('MVP', 'str_data', [], {})
         self.config.update({
-            'model_path': '/root/Project/IPMN-07/Backend/model/checkpoint_best'
+            'model_path': os.path.join(os.getcwd(), 'model/checkpoint_best')
         })
         self.tokenizer = None
         # self.unwrap_model = None
