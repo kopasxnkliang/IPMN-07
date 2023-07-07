@@ -34,7 +34,7 @@
 						</div>
 						<div :class="'omittedText'">
 							<el-skeleton :rows="0" v-if="sen.senLoading || sen.Text==''" animated ></el-skeleton>
-							<p v-else>{{sen.Text}}</p>
+							<p v-else :class="'omittedTextShow'">{{sen.Text}}</p>
 						</div>
 					</div>
 					
@@ -154,7 +154,7 @@ function constructSenTest(){
 
 onMounted(()=>{
 	recommendRelation.value = constructRecom()
-	Sentences.value = constructSenTest()
+	// Sentences.value = constructSenTest()
 })
 
 function findSen(idx){
@@ -687,7 +687,19 @@ function calTextLen(src, defal){
 		font-family: 'Inter';
 		font-style: normal;
 		font-weight: 400;
-		font-size: 13px;
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		overflow: hidden;
+	}
+	
+	.omittedTextShow{
+		width: 100%;
+		height: auto;
+		max-height: 100%;
+		margin: 0 0 0 0;
+		font-size: 12px;
+		line-height: normal;
 	}
 
 	.inputBox{

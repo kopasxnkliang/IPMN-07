@@ -74,7 +74,7 @@ class MVP:
         unwrap_model.tokenizer.from_pretrained(self.config['model_path'])
 
     def genModelInput(self, tripleSets):
-        s = ' [SEP] '.join(tripleSets)
+        s = "Describe the following data: " + ' [SEP] '.join(tripleSets)
         token = self.tokenizer(
             s,
             add_special_tokens=False,
