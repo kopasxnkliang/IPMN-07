@@ -229,7 +229,7 @@ function SaveButtonClick(){
 		cancelButtonClick()
 		return
 	}
-	var tripleSet = tripleSet1.value+' | '+tripleSet2.value+' | '+tripleSet3.value
+	var tripleSet = tripleSet1.value.trim()+' | '+tripleSet2.value.trim()+' | '+tripleSet3.value.trim()
 	var curid = findSen(activeSentence.value)
 	
 	Sentences.value[curid].Relation.push(tripleSet)
