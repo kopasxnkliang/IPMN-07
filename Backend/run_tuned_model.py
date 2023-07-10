@@ -93,7 +93,7 @@ class MVP:
     def generate(self, tripleSets):
         data = self.genModelInput(tripleSets)
         generated = self.accelerator.unwrap_model(self.modelClass).generate(data, self.accelerator)
-        print(generated)
+        # print(generated)
         return generated[0]
 
 
