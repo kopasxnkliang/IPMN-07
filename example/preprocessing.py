@@ -1,6 +1,15 @@
 # preprocessing.py
 # prepare raw string list data
 
+# download data (from hugging face / kaggle / manual collection)
+# text selection (according to word list)
+# text filtering (remove irrelevant characters)
+# dataset expansion (by paraphrasing)
+# extract noun phrases within each sentence
+# extract relatiosn from noun phrases
+# relation filtering
+# transform filtered data into XML format
+
 import os
 import csv
 import json
