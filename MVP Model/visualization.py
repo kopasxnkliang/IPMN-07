@@ -1,6 +1,6 @@
 
 # visualization.py
-# visualize training process
+# visualize training process from /*model_path/project.log
 
 import os
 from torch.utils.tensorboard import SummaryWriter
