@@ -1,5 +1,7 @@
 # xml2txt.py
-# transform xml file to txt(.src / .tgt)
+
+# transform a XML data file to 6 txt(.src / .tgt) files
+# processing functions including train_test_split
 
 import os
 # import xml.etree.ElementTree as ET
