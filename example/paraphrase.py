@@ -1,6 +1,8 @@
-
 # paraphrase.py
 
+# enlarge the size of dataset by paraphrasing
+# i.e. text to text generation
+# paraphrasing model originates from https://huggingface.co/tuner007/pegasus_paraphrase
 
 import os
 import torch
