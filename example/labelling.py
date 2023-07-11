@@ -7,6 +7,7 @@ from dataclasses import dataclass
 # from textblob import TextBlob
 import spacy
 import nltk
+# after `pip install nltk`, please run following codes to download additional packages
 # nltk.download('brown')
 # nltk.download('punkt')
 from tqdm import tqdm
