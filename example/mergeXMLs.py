@@ -1,3 +1,8 @@
+# mergeXMLs.py 
+
+# merge data from multiple different XML files
+# and save the collected data in one single XML file
+
 from lxml import etree
 # import matplotlib.pyplot as plt
 # import pandas as pd
