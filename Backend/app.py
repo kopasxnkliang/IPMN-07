@@ -1,3 +1,11 @@
+"""
+This script handles POST request, generates sentence using data from frontend, and returns the 
+generated sentence we want to display in the user's browser.
+
+This script requires that `flask` be installed within the Python
+environment you are running this script in.
+"""
+
 from flask import Flask,jsonify,request,json
 # from transformers import MvpTokenizer, MvpForConditionalGeneration
 import run_tuned_model

@@ -1,3 +1,15 @@
+"""
+This script allows user to load the fine-tuned MVP model and generate the sentence from the input.
+
+This script requires TextBox be installed in Backend within the Python
+environment you are running this script in.
+
+Please install TextBox according to the instructions in the following link: 
+https://github.com/RUCAIBox/TextBox.
+
+This file can also be imported as a module (used in Backend/app.py).
+"""
+
 import os
 import sys
 import torch
