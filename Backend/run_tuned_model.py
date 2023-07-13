@@ -65,6 +65,7 @@ class MVP:
         self.accelerator = None
         self._loadModel()
 
+    # load the model when start up
     def _loadModel(self):
         from accelerate import DistributedDataParallelKwargs
         ddp_kwargs = DistributedDataParallelKwargs(find_unused_parameters=self.config['find_unused_parameters'])
@@ -85,6 +86,7 @@ class MVP:
         unwrap_model.from_pretrained(self.config['model_path'])
         unwrap_model.tokenizer.from_pretrained(self.config['model_path'])
 
+    # transfer triple sets to model input
     def genModelInput(self, tripleSets):
         s = "Describe the following data: " + ' [SEP] '.join(tripleSets)
         token = self.tokenizer(
@@ -102,6 +104,7 @@ class MVP:
                   'target_text': ['']}
         return inputs
 
+    # generate sentence
     def generate(self, tripleSets):
         data = self.genModelInput(tripleSets)
         generated = self.accelerator.unwrap_model(self.modelClass).generate(data, self.accelerator)
