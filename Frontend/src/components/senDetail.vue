@@ -80,7 +80,7 @@
               <el-button type="info" circle style="margin-left: 12px;"
                          @click="tagCancelButtonClick" :icon="Close" size="small"></el-button>
               <el-button type="info" circle style="margin-left: 2px;"
-                         @click="tagChangeButtonClick" :icon="Check" size="small"></el-button>
+                         @click="tagEditButtonClick" :icon="Check" size="small"></el-button>
             </div>
 						<el-button plain :icon="Plus" 
 						:class="'relationTag'" @click="formVisible=true" v-else></el-button>
@@ -110,25 +110,40 @@ import { ref,onMounted } from 'vue';
 import {ElMessage } from 'element-plus' 
 import axios from "axios";
 
-const baseID = 1200
+// generate a random int (max=100000000) as base id
+const baseID = Math.floor(Math.random()*100000000)
 
+// activate id of el-collapse
 let activeSentence = ref(-1)
 
+// input box of triple sets
 let tripleSet1 = ref('')
 let tripleSet2 = ref('')
 let tripleSet3 = ref('')
-let tmpTripleSet = ref('')
-let count = 5
+let tmpTripleSet = ''
 
-const recommends = ["main subject",'follow','have part', 'participant','location']
+// count for sentences, used to generate sentence ID
+let count = 1
+
+// search domain of el-autocomplete
+const recommends = ["main subject",'follow','have part', 'participant','location', 'part of', 'subsidiary', 
+					'instance of']
+// search results that is needed to be shown in el-autocomplete
 const recommendRelation = ref([])
+
+// visilibablity of input triples
 let formVisible = ref(false)
+
+// visilibablity of change triples
 let changeFormVisible = ref(false)
 
+// server url (based on vite.config.js)
 const serverIP = "/api/example"
 
+// sentences that need to be shown on screen
 let Sentences = ref([])
 
+// generate structure used in el-autocomplete
 function constructRecom(){
 	let ret = []
 	for(var i=0;i<recommends.length;i++){
@@ -137,26 +152,13 @@ function constructRecom(){
 	return ret
 }
 
-function constructSenTest(){
-	return [{
-			ID:baseID+1,
-			Relation: ["1 | 2 | 3", "4 | 5 | 6", "7 | 8 | 9", "10 | 11 | 12","13 | 14 | 15","16 | 17 | 18","19 | 20 | 21"],
-			// Text: "This is the text data1"
-			Text: '',
-			senLoading:false
-		},{
-			ID:baseID+2,
-			Relation: ["7 | 8 | 9","10 | 11 | 12"],
-			Text: "This is the text data2",
-			senLoading:false
-		}]
-}
-
+// load autocomplete list when mount the web
 onMounted(()=>{
 	recommendRelation.value = constructRecom()
 	// Sentences.value = constructSenTest()
 })
 
+// search a sentence with certain ID
 function findSen(idx){
 	for (var i=0; i<Sentences.value.length; i++){
 		if (Sentences.value[i].ID == idx){
@@ -166,7 +168,7 @@ function findSen(idx){
 	return -1
 }
 
-// 删除三元组Tag
+// delete triple set
 function closeTag(tag){
 	var curid = findSen(activeSentence.value)
 	if (curid ==-1 ){
@@ -175,7 +177,7 @@ function closeTag(tag){
 	Sentences.value[curid].Relation.splice(Sentences.value[curid].Relation.indexOf(tag),1)
 }
 
-// createFilter/querySearch 对el-autocomplete进行搜索
+// search words that is similar in el-autocomplete, return a filter
 const createFilter = (queryString) => {
 	return (words) =>{
 		return (
@@ -184,6 +186,7 @@ const createFilter = (queryString) => {
 	}
 }
 
+// search words that is similar in el-autocomplete
 const querySearch = (queryString, cb) => {
 	const results = queryString 
 	? recommendRelation.value.filter(createFilter(queryString))
@@ -191,6 +194,7 @@ const querySearch = (queryString, cb) => {
 	cb(results)
 }
 
+// click action when triple set is clicked, open edit form
 function tagClick(tag){
   tmpTripleSet = tag.valueOf()
   const tripleSet = tag.valueOf().split(" | ")
@@ -200,7 +204,8 @@ function tagClick(tag){
   changeFormVisible.value = true
 }
 
-function tagChangeButtonClick(){
+// end edit and save
+function tagEditButtonClick(){
   if (tripleSet1.value === "" || tripleSet2.value === "" || tripleSet3.value === ""){
     tagCancelButtonClick()
     return
@@ -217,6 +222,7 @@ function tagChangeButtonClick(){
 
 }
 
+// close edit form and remove all possible changes
 function tagCancelButtonClick(){
   tripleSet1.value = ""
   tripleSet2.value = ""
@@ -224,6 +230,7 @@ function tagCancelButtonClick(){
   changeFormVisible.value = false
 }
 
+// save a input triple set
 function SaveButtonClick(){
 	if (tripleSet1.value=="" || tripleSet2.value == "" || tripleSet3.value == ""){
 		cancelButtonClick()
@@ -239,6 +246,7 @@ function SaveButtonClick(){
 	formVisible.value = false
 }
 
+// close add form
 function cancelButtonClick(){
 	tripleSet1.value = ""
 	tripleSet2.value = ""
@@ -246,6 +254,7 @@ function cancelButtonClick(){
 	formVisible.value = false
 }
 
+// add a sentence
 function addsenButtonClick(){
 	count++
 	var newid = baseID + count
@@ -258,6 +267,7 @@ function addsenButtonClick(){
 	activeSentence.value = newid
 }
 
+// copy the input text to clipboard
 async function clipText(text){
 	const { toClipboard } = useClipboard()
 	try {
@@ -268,6 +278,7 @@ async function clipText(text){
 	}
 }
 
+// copy all not empty sentences to clipboard
 function clipBigClick(){
 	var text = new String
 	for (var i=0;i<Sentences.value.length;i++){
@@ -276,11 +287,13 @@ function clipBigClick(){
 	clipText(text)
 }
 
+// copy a sentence to clipboard
 function clipSmallClick(){
 	var curid = findSen(activeSentence.value)
 	clipText(Sentences.value[curid].Text)
 }
 
+// delete a sentence
 function deleteSenClick(){
 	var curid = findSen(activeSentence.value)
 	if (curid==-1){
@@ -290,6 +303,7 @@ function deleteSenClick(){
 	activeSentence.value = -1
 }
 
+// send a request to backend to generate a sentence
 function generateSenClick(idx){
 	// 1. get cur id
 	var curid = findSen(activeSentence.value)
@@ -322,6 +336,7 @@ function generateSenClick(idx){
 		 })
 }
 
+// calculate the real length of text that is shown on screen
 function calTextLen(src, defal){
 	// console.error(src)
 	if (src.length == 0){
