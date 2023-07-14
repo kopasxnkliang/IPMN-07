@@ -64,26 +64,35 @@
 							<el-button type="info" circle style="margin-left: 2px;"
 							@click="SaveButtonClick" :icon="Check" size="small"></el-button>
 						</div>
-            <div :class="'inputTriple'" v-if="changeFormVisible" style="font-size: 12px;">
+						<div :class="'inputTriple'" v-if="changeFormVisible" style="font-size: 12px;">
 
-              <el-input v-model="tripleSet1" size="small" :style="{width:calTextLen(tripleSet1,50)}"
-                        placeholder="Word1" clearable :class="'input'" autosize></el-input>
+						  <el-input v-model="tripleSet1" size="small" :style="{width:calTextLen(tripleSet1,50)}"
+									placeholder="Word1" clearable :class="'input'" autosize></el-input>
 
-              <el-autocomplete v-model="tripleSet2"
-                               :style="{width:calTextLen(tripleSet2,65)}"
-                               :fetch-suggestions="querySearch" style="margin-left: 2px;;"
-                               clearable placeholder="Relation" :class="'input'" size="small"
-              ></el-autocomplete>
-              <el-input v-model="tripleSet3" style="margin-left: 2px;"
-                        :style="{width:calTextLen(tripleSet3,50)}"
-                        placeholder="Word2" clearable :class="'input'" size="small"></el-input>
-              <el-button type="info" circle style="margin-left: 12px;"
-                         @click="tagCancelButtonClick" :icon="Close" size="small"></el-button>
-              <el-button type="info" circle style="margin-left: 2px;"
-                         @click="tagEditButtonClick" :icon="Check" size="small"></el-button>
-            </div>
-						<el-button plain :icon="Plus" 
-						:class="'relationTag'" @click="formVisible=true" v-else></el-button>
+						  <el-autocomplete v-model="tripleSet2"
+										   :style="{width:calTextLen(tripleSet2,65)}"
+										   :fetch-suggestions="querySearch" style="margin-left: 2px;;"
+										   clearable placeholder="Relation" :class="'input'" size="small"
+						  ></el-autocomplete>
+						  <el-input v-model="tripleSet3" style="margin-left: 2px;"
+									:style="{width:calTextLen(tripleSet3,50)}"
+									placeholder="Word2" clearable :class="'input'" size="small"></el-input>
+						  <el-button type="info" circle style="margin-left: 12px;"
+									 @click="tagCancelButtonClick" :icon="Close" size="small"></el-button>
+						  <el-button type="info" circle style="margin-left: 2px;"
+									 @click="tagEditButtonClick" :icon="Check" size="small"></el-button>
+						</div>
+						<div :class="'tagButtons'" >
+							<el-tooltip content="Add a new relation" >
+								<el-button plain :icon="Plus"
+								:class="'relationTag'" @click="formVisible=true" v-if="!formVisible && !changeFormVisible"/> 
+							</el-tooltip>	
+							<el-tooltip content="Question about relations?" >
+								<el-button plain :icon="QuestionFilled" 
+								@click="openRelationHelp" :class="'relationTag'" style="margin-left: 0px;"/>
+							</el-tooltip>
+						</div>
+						
 					</div>
 
 					<div :class="'SenText'">
@@ -105,9 +114,9 @@
 
 <script setup>
 import useClipboard from "vue-clipboard3";
-import {Delete, Plus, CopyDocument,Check,Close,Refresh} from '@element-plus/icons-vue'
-import { ref,onMounted } from 'vue';
-import {ElMessage } from 'element-plus' 
+import {Delete, Plus, CopyDocument,Check,Close,Refresh,QuestionFilled} from '@element-plus/icons-vue'
+import { ref, onMounted, h} from 'vue';
+import { ElMessage, ElMessageBox } from 'element-plus' 
 import axios from "axios";
 
 // generate a random int (max=100000000) as base id
@@ -355,6 +364,38 @@ function calTextLen(src, defal){
 
 }
 
+// open help window for relation
+function openRelationHelp(){
+
+	
+	ElMessageBox({
+		title: 'Instruction of relation triple sets',
+		message: h('div',null,[
+			h('p', {style:"font-weight:bold;display:inline;"}, '1 '),
+			h('p', {style:"display:inline;"}, `An Appropriate number of triple set data, about 3 to 7 triple sets, contributes to better generation results.`),
+			h('p',null,null),
+			h('p', {style:"font-weight:bold;display:inline;"}, '2 '),
+			h('p', {style:"display:inline;"}, `In general, each triple set consists of 2 keywords and 1 relation.`),
+			h('p', null, `\u2003-The former keyword is usually an abstract notion or a definition term.`),
+			h('p', null, `\u2003-The latter keyword is a specific and substantial data belonging to the former keyword`),
+			h('p', {style:"font-weight:bold;display:inline;"}, '3 '),
+			h('p', {style:"display:inline;"}, `The structured data, e.g. the table data, is also recommended to transform into the tripleset data.`),
+			h('p', null, "\u2003-The column names can be the former keywords"),
+			h('p', null, "\u2003-The values of objects become the latter keyword."),
+			h('p', null, "\u2003-The abstract relationship between two keywords is corresponding relation word."),
+			h('p', {style:"font-weight:bold;display:inline;"}, '4 '),
+			h('p', {style:"display:inline;"}, `The structure of a triple set is "keyword | relation | keyword".`),
+			h('p', null, `\u2003Example: "money laundering suspect | identity | Johnson"`),
+			h('p', null, `\u2003\u2003Keyword 1: "money laundering suspect" is a general concept or a category that you want to define or describe.`),
+			h('p', null, `\u2003\u2003Relation: "identity" connects "money laundering suspect" and "Johnson" and shows how they are related.`),
+			h('p', null, `\u2003\u2003Keyword 2: "Johnson" is a specific instance or a member of keyword 1.`),
+			h('p', {style:"font-weight:bold;display:inline;"}, '5 '),
+			h('p', {style:"display:inline;"}, `Satisfactory results can be obtained from multiple trials. Similar to the other generation models, our model may generate different outputs given the same input tripleset data.`),
+			]), 
+		confirmButtonText: 'OK',
+	})
+	
+}
 
 </script>
 
@@ -790,5 +831,19 @@ function calTextLen(src, defal){
 		border: 1px solid #000000;
 		border-radius: 4px;
 		background-color: rgb(244, 244, 245);
+	}
+	
+	.el-message-box {
+		width: fit-content;
+		max-width: 66%;
+	}
+	
+	.tagButtons{
+		gap: 2px;
+		display: flex;
+		flex-direction: row;
+		align-content: center;
+		justify-content: center;
+		align-items: center;
 	}
 </style>
