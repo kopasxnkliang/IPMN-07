@@ -31,6 +31,20 @@ Folder ./utils/evaluation_utils includes python scripts for result visualization
 	├── test.src
 	└── test.tgt 
 ├── instructions
+├── saved
+     └── *<Checkpoint_best>
+	├── pytorch_model.bin
+	├── added_token.json
+	├── config.json
+	├── generation.txt
+	├── project.log
+	├── pytorch_model.bin
+	├── special_tokens_map.json
+	├── optimizer.pt
+	├── textbox_configuration.json
+	├── tokenizer.json
+	├── tokenizer_config.json
+	└── vocab.json
 ├── packages
 ├── textbox
     ├── config
@@ -43,12 +57,12 @@ Folder ./utils/evaluation_utils includes python scripts for result visualization
 	    └── str_data.yaml
     ├── quick_start
     ├── trainer
-    ├── utils
-    └── str_data
+    └── utils
 ├── *run.sh
 └── run_textbox.py
-
 ```
+
+The filenames or foldernames with the star(*) sign are the newly added files that do not exist in original TextBox folder. 
 
 3. Install TextBox according to https://github.com/RUCAIBox/TextBox. Additional packages are listed in requirements.txt in folder ./TextBox
 ```
