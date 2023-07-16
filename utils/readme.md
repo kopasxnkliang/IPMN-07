@@ -194,6 +194,6 @@ python run_textbox.py --model=MVP --dataset=<dataset_name> --model_path=<fine-tu
 }
 ```
 
-3. SpaCy: https://github.com/explosion/spaCy
+3. SpaCy: https://github.com/explosion/spaCy and https://spacy.io/
 
 
