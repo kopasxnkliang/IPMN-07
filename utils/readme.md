@@ -104,7 +104,19 @@ python run_textbox.py --model=MVP --dataset=<dataset_name> --model_path=RUCAIBox
 ```
 Evaluation result will be listed in ./TextBox/textbox/<dataset_name>_<start_time>/project.log
 
-6. 
+6. To evaluate a fine-tuned model, editions are needed. In ./TextBox/textbox/quick_start/experiment.py, comment line 142 & 144
+```
+	            # self._do_train_and_valid()
+	            self._do_test()
+	            # self._on_experiment_end()
+```
+And comment line 502 in ./TextBox/textbox/trainer/trainer.py and add following line in the next line.
+```
+checkpoint_dir = <the_absolute_file_path_of_the_fine-tuned_model>
+```
+```
+python run_textbox.py --model=MVP --dataset=<dataset_name> --model_path=<fine-tuned_model_folder_path>
+```
 
 7. 
 
@@ -161,6 +173,7 @@ Package and Code Citations:
 
 1 TextBox: https://github.com/RUCAIBox/TextBox
 
+```
 @inproceedings{tang-etal-2022-textbox,
     title = "{T}ext{B}ox 2.0: A Text Generation Library with Pre-trained Language Models",
     author = "Tang, Tianyi  and  Li, Junyi  and  Chen, Zhipeng  and  Hu, Yiwen  and  Yu, Zhuohao  and  Dai, Wenxun  and  Zhao, Wayne Xin  and  Nie, Jian-yun  and  Wen, Ji-rong",
@@ -172,7 +185,6 @@ Package and Code Citations:
     url = "https://aclanthology.org/2022.emnlp-demos.42",
     pages = "435--444",
 }
-
 
 @inproceedings{textbox,
     title = "{T}ext{B}ox: A Unified, Modularized, and Extensible Framework for Text Generation",
@@ -186,9 +198,10 @@ Package and Code Citations:
     doi = "10.18653/v1/2021.acl-demo.4",
     pages = "30--39",
 }
+```
 
 2. OpenNRE: https://github.com/thunlp/OpenNRE
-   
+```
 @inproceedings{han-etal-2019-opennre,
     title = "{O}pen{NRE}: An Open and Extensible Toolkit for Neural Relation Extraction",
     author = "Han, Xu and Gao, Tianyu and Yao, Yuan and Ye, Deming and Liu, Zhiyuan and Sun, Maosong",
@@ -198,6 +211,7 @@ Package and Code Citations:
     doi = "10.18653/v1/D19-3029",
     pages = "169--174"
 }
+```
 
 3. SpaCy: https://github.com/explosion/spaCy
 
