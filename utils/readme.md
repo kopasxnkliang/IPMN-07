@@ -14,7 +14,8 @@ Installation Procedures:
     └── visualization.py
 └── readme.md
 ```
-Folder ./utils/preprocessing_utils contains python scripts to transform raw data to dataset used to fine-tune the model.
+Folder ./utils/preprocessing_utils contains python scripts to transform raw data to dataset used to fine-tune the model. paraphrase.py uses trained text-to-text generation model https://huggingface.co/tuner007/pegasus_paraphrase created by Arpit Rajauria to enlarge our STR dataset, and it is called by preprocessing.py. Functions in labelling.py are also called by preprocessing.py to create labels
+
 Folder ./utils/evaluation_utils includes python scripts for result visualization and comparison.
 
 2. Download the fine-tuned model (Best Fine-tuned Model) from Google Drive link listed in our project report and copy the model folder to ./TextBox/saved/<Checkpoint_best>. The ./TextBox file structure is as follow:
@@ -101,7 +102,7 @@ python run_textbox.py --model=MVP --dataset=str_data --model_path=<fine-tuned_mo
 ```
 python run_textbox.py --model=MVP --dataset=<dataset_name> --model_path=RUCAIBox/mvp-data-to-text
 ```
-Evaluation
+Evaluation result will be listed in ./TextBox/textbox/<dataset_name>_<start_time>/project.log
 
 6. 
 
@@ -156,8 +157,9 @@ Evaluation
 
 
 
-Citations:
-TextBox: https://github.com/RUCAIBox/TextBox
+Package and Code Citations:
+
+1 TextBox: https://github.com/RUCAIBox/TextBox
 @inproceedings{tang-etal-2022-textbox,
     title = "{T}ext{B}ox 2.0: A Text Generation Library with Pre-trained Language Models",
     author = "Tang, Tianyi  and  Li, Junyi  and  Chen, Zhipeng  and  Hu, Yiwen  and  Yu, Zhuohao  and  Dai, Wenxun  and  Zhao, Wayne Xin  and  Nie, Jian-yun  and  Wen, Ji-rong",
@@ -183,3 +185,18 @@ TextBox: https://github.com/RUCAIBox/TextBox
     doi = "10.18653/v1/2021.acl-demo.4",
     pages = "30--39",
 }
+
+2. OpenNRE: https://github.com/thunlp/OpenNRE
+@inproceedings{han-etal-2019-opennre,
+    title = "{O}pen{NRE}: An Open and Extensible Toolkit for Neural Relation Extraction",
+    author = "Han, Xu and Gao, Tianyu and Yao, Yuan and Ye, Deming and Liu, Zhiyuan and Sun, Maosong",
+    booktitle = "Proceedings of EMNLP-IJCNLP: System Demonstrations",
+    year = "2019",
+    url = "https://www.aclweb.org/anthology/D19-3029",
+    doi = "10.18653/v1/D19-3029",
+    pages = "169--174"
+}
+
+3. SpaCy: https://github.com/explosion/spaCy
+
+5. 
