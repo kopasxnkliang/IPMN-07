@@ -54,7 +54,7 @@ Folder ./utils/evaluation_utils includes python scripts for result visualization
     ├── properties
 	├── overall.yaml
 	└── dataset
-	    └── str_data.yaml
+	    └── *str_data.yaml
     ├── quick_start
     ├── trainer
     └── utils
@@ -62,7 +62,7 @@ Folder ./utils/evaluation_utils includes python scripts for result visualization
 └── run_textbox.py
 ```
 
-The filenames or foldernames with the star(*) sign are the newly added files that do not exist in original TextBox folder. 
+The filenames or foldernames with the star(*) sign are the files that we add and edit, and they were not in original TextBox folder. 
 
 3. Install TextBox according to https://github.com/RUCAIBox/TextBox. Additional packages are listed in requirements.txt in folder ./TextBox
 ```
@@ -72,13 +72,15 @@ cd <your_folder_path_to_TextBox>
 bash install.sh
 pip install -r requirements.txt
 ```
-
+After successfully installing TextBox, run following python scripts in the same terminal in the same `<your_env_name>` conda environment. 
 ```
 python
 import nltk
 nltk.download('brown')
 nltk.download('punkt')
 ```
+
+4. Before fine-tuning the original MVP-data-to-text model, check the parameter setting including the learning rate, batch size, evaluation metrics and other essential parameters in ./TextBox/textbox/properties/overall.yaml and ./TextBox/textbox/properties/dataset/str_data.yaml
 
 5. 
 
