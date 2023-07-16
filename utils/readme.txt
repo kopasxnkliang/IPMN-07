@@ -1,5 +1,7 @@
 Citations:
-the TextBox codes are cloned from https://github.com/RUCAIBox/TextBox.git
+the TextBox codes are cloned from https://github.com/RUCAIBox/TextBox
+`git clone https://github.com/RUCAIBox/TextBox.git`
+
 
 @inproceedings{tang-etal-2022-textbox,
     title = "{T}ext{B}ox 2.0: A Text Generation Library with Pre-trained Language Models",
