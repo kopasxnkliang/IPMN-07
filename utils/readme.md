@@ -80,9 +80,13 @@ nltk.download('brown')
 nltk.download('punkt')
 ```
 
-4. Before fine-tuning the original MVP-data-to-text model, check the parameter setting including the learning rate, batch size, evaluation metrics and other essential parameters in ./TextBox/textbox/properties/overall.yaml and ./TextBox/textbox/properties/dataset/str_data.yaml
+4. Before fine-tuning the original MVP-data-to-text model, check the parameter setting including the learning rate, batch size, evaluation metrics and other essential parameters in ./TextBox/textbox/properties/overall.yaml and ./TextBox/textbox/properties/dataset/str_data.yaml. Also, check if the remaining disk storage is larger than 10GB because while fine-tuning the pretrained model, the latest fine-tuned model as well as the best fine-tuned model will be saved in the ./TextBox/saved/STR_data_<start_training_time>. Besides, adjusting batch size according to the GPU memory. For a single RTX 2080 Ti with 12GB GPU memory, the batch size for training is limited to 2, while eval batch size can only be set as 1. For a single RTX 3090 with 24GB GPU memory, the training and evaluation batch size can be set as 20 and 10, respectively.
 
-5. 
+6.  
+
+7. 
+
+8. 
 
 
 
