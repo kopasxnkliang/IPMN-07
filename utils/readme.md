@@ -1,4 +1,4 @@
-Installation Procedures:
+#### Installation Procedures for Fine-tuning and Evaluation:
 
 1. Download the code folders (utils and TextBox) from the Google Drive link listed in our project report. Our raw data and processed dataset are available and saved in TextBox/dataset. The file structure of ./utils is as follow:
    
@@ -114,15 +114,10 @@ And comment line 502 in ./TextBox/textbox/trainer/trainer.py and add following l
 ```
 checkpoint_dir = <the_absolute_file_path_of_the_fine-tuned_model>
 ```
+Run following command and the evaluation result will be shown in ./TextBox/textbox/<dataset_name>_<start_time>/project.log
 ```
 python run_textbox.py --model=MVP --dataset=<dataset_name> --model_path=<fine-tuned_model_folder_path>
 ```
-
-7. 
-
-8. 
-
-
 
 #### structure of the utils folder
 ```
@@ -133,20 +128,7 @@ python run_textbox.py --model=MVP --dataset=<dataset_name> --model_path=<fine-tu
 ├── run_tuned_model.py
 └── TextBox
 ```
-#### ~~modification~~
 
-~~1. TextBox/textbox/trainer/trainer.py line 502~~
-~~change ```checkpoint_dir = self.saved_model_filename + '_best'``` to full path of ```model/checkpoint_best```~~
-
-~~2. TextBox/textbox/quick_start/experiment.py comment out line 140 & 142~~
-
-	```
-	            # self._do_train_and_valid()
-	            self._do_test()
-	            # self._on_experiment_end()
-	```
-~~3. Backend/run_tuned_model.py line 23~~
-~~change ```--model_path=../IPMN-07/Backend/model/checkpoint_best``` to full path of checkpoint_best~~
 
 #### Requirements
     TextBox (https://github.com/RUCAIBox/TextBox)
@@ -166,7 +148,6 @@ python run_textbox.py --model=MVP --dataset=<dataset_name> --model_path=<fine-tu
 
 #### Run
 `python app.py` The backend would run on port 5000.
-
 
 
 Package and Code Citations:
