@@ -22,8 +22,8 @@ Folder ./utils/evaluation_utils includes python scripts for result visualization
 ```
 ├── asset
 ├── dataset
-    ├── STR_data.xml
-    └── str_data
+    ├── *STR_data.xml
+    └── *str_data
 	├── train.src
 	├── train.tgt
 	├── valid.src
@@ -33,8 +33,21 @@ Folder ./utils/evaluation_utils includes python scripts for result visualization
 ├── instructions
 ├── packages
 ├── textbox
-    ├── STR_data.xml
+    ├── config
+    ├── data
+    ├── evaluator
+    ├── model
+    ├── properties
+	├── overall.yaml
+	└── dataset
+	    └── str_data.yaml
+    ├── quick_start
+    ├── trainer
+    ├── utils
     └── str_data
+├── *run.sh
+└── run_textbox.py
+
 ```
 
 3. Install TextBox according to https://github.com/RUCAIBox/TextBox. Additional packages are listed in requirements.txt in folder ./TextBox
