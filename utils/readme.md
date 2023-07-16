@@ -80,7 +80,9 @@ nltk.download('brown')
 nltk.download('punkt')
 ```
 
-4. Before fine-tuning the original MVP-data-to-text model, check the parameter setting including the learning rate, batch size, evaluation metrics and other essential parameters in ./TextBox/textbox/properties/overall.yaml and ./TextBox/textbox/properties/dataset/str_data.yaml. Also, check if the remaining disk storage is larger than 10GB because while fine-tuning the pretrained model, the latest fine-tuned model as well as the best fine-tuned model will be saved in the ./TextBox/saved/STR_data_<start_training_time>. Besides, adjusting batch size according to the GPU memory. For a single RTX 2080 Ti with 12GB GPU memory, the batch size for training is limited to 2, while eval batch size can only be set as 1. For a single RTX 3090 with 24GB GPU memory, the training and evaluation batch size can be set as 20 and 10, respectively.
+4. Before fine-tuning the original MVP-data-to-text model, check the parameter setting including the learning rate, batch size, evaluation metrics and other essential parameters in ./TextBox/textbox/properties/overall.yaml and ./TextBox/textbox/properties/dataset/str_data.yaml. Also, check if the remaining disk storage is larger than 10GB because while fine-tuning the pretrained model, the latest fine-tuned model as well as the best fine-tuned model will be saved in the ./TextBox/saved/STR_data_<start_training_time>. The best fine-tuned model is selected by the highest generation score, which sums up the selected evaluation metrics. The metrics include: bleu, rouge-1, rouge-2, rouge-l and meteor. These metrics can be assigned in <dataset_name>.yaml in the same folder as the str_data.yaml.
+
+Besides, adjusting batch size according to the GPU memory. For a single RTX 2080 Ti with 12GB GPU memory, the batch size for training is limited to 2, while eval batch size can only be set as 1. For a single RTX 3090 with 24GB GPU memory, the training and evaluation batch size can be set as 20 and 10, respectively.
 
 To fine-tune a new MVP-data-to-text model, run
 ```
@@ -95,7 +97,13 @@ To resume fine-tuning process using an existing fine-tuned model, run
 python run_textbox.py --model=MVP --dataset=str_data --model_path=<fine-tuned_model_folder_path>
 ```
 
-6.  
+5. To quantitatively evaluate the generation ability of the original MVP-data-to-text model on a specific dataset, set learning rate=0 in ./TextBox/textbox/properties/dataset/<dataset_name>.yaml and set epochs=1 in the same <dataset_name>.yaml. Run the following command in terminal. 
+```
+python run_textbox.py --model=MVP --dataset=<dataset_name> --model_path=RUCAIBox/mvp-data-to-text
+```
+Evaluation
+
+6. 
 
 7. 
 
