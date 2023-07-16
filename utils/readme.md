@@ -1,6 +1,6 @@
 Installation Procedures:
 
-1. Download the code folders (utils and TextBox) from Google Drive link listed in our project report. Our raw data and processed dataset are available and saved in TextBox/dataset. The file structure of ./utils is as follow:
+1. Download the code folders (utils and TextBox) from the Google Drive link listed in our project report. Our raw data and processed dataset are available and saved in TextBox/dataset. The file structure of ./utils is as follow:
    
 ```
 ├── preprocessing_utils
@@ -64,7 +64,7 @@ Folder ./utils/evaluation_utils includes python scripts for result visualization
 
 The filenames or foldernames with the star(*) sign are the files that we add and edit, and they were not in original TextBox folder. 
 
-3. Install TextBox according to https://github.com/RUCAIBox/TextBox. Additional packages are listed in requirements.txt in folder ./TextBox
+3. Install TextBox according to https://github.com/RUCAIBox/TextBox. Additional packages are listed in requirements.txt in folder ./TextBox.
 ```
 conda create -n <your_env_name> python=3.8
 conda activate <your_env_name>
@@ -72,7 +72,7 @@ cd <your_folder_path_to_TextBox>
 bash install.sh
 pip install -r requirements.txt
 ```
-After successfully installing TextBox, run following python scripts in the same terminal in the same `<your_env_name>` conda environment. 
+After successfully installing TextBox, run the following python scripts in the same terminal in the same `<your_env_name>` conda environment. 
 ```
 python
 import nltk
@@ -81,6 +81,19 @@ nltk.download('punkt')
 ```
 
 4. Before fine-tuning the original MVP-data-to-text model, check the parameter setting including the learning rate, batch size, evaluation metrics and other essential parameters in ./TextBox/textbox/properties/overall.yaml and ./TextBox/textbox/properties/dataset/str_data.yaml. Also, check if the remaining disk storage is larger than 10GB because while fine-tuning the pretrained model, the latest fine-tuned model as well as the best fine-tuned model will be saved in the ./TextBox/saved/STR_data_<start_training_time>. Besides, adjusting batch size according to the GPU memory. For a single RTX 2080 Ti with 12GB GPU memory, the batch size for training is limited to 2, while eval batch size can only be set as 1. For a single RTX 3090 with 24GB GPU memory, the training and evaluation batch size can be set as 20 and 10, respectively.
+
+To fine-tune a new MVP-data-to-text model, run
+```
+cd TextBox
+conda activate <your_env_name>
+python run_textbox.py --model=MVP --dataset=str_data --model_path=RUCAIBox/mvp-data-to-text
+```
+TextBox will automatically create a folder in ./TextBox/saved/STR_data_<start_training_time> and save all generated config file and model weights.
+
+To resume fine-tuning process using an existing fine-tuned model, run
+```
+python run_textbox.py --model=MVP --dataset=str_data --model_path=<fine-tuned_model_folder_path>
+```
 
 6.  
 
