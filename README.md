@@ -150,6 +150,7 @@ python run_textbox.py --model=MVP --dataset=<dataset_name> --model_path=<fine-tu
 
 #### Run
 `python app.py` The backend would run on port 5000.
+`python run_tuned_model.py` Run this file to test your environment without flask
 
 
 #### Package and Code Citations:

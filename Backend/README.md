@@ -4,6 +4,9 @@ First, install TextBox. Then move TextBox to Backend and move checkpoint_best to
 #### structure
 ```
 ├── app.py
+├── ConfigforTextBox
+    ├── dataset
+    └── textbox
 ├──model
     └── checkpoint_best
 ├── README.md
@@ -43,3 +46,4 @@ First, install TextBox. Then move TextBox to Backend and move checkpoint_best to
 
 #### Run
 `python app.py` The backend would run on port 5000.
+`python run_tuned_model.py` Run this file to test your environment without flask
