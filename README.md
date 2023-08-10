@@ -19,7 +19,7 @@ To fine-tune a data-to-text generation model for generating descriptive sentence
 <img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/generation_score.jpeg" alt="alt text" width="540" height="400">
 
 #### Before and After Fine-tuning
-<img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/comparion_results.png" alt="alt text" width="640" height="320">
+<img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/comparion_results.png" alt="alt text" width="600" height="280">
 
 #### Parameters Tuning
 <img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/parameter_tuning.png" alt="alt text" width="640" height="400">
