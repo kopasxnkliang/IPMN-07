@@ -1,6 +1,6 @@
 # IPMN-07
 
-#### Installation Procedures for Fine-tuning and Evaluation:
+### Installation Procedures for Fine-tuning and Evaluation
 
 1. Download the code folders (utils and TextBox) from the Google Drive link listed in our project report. Our raw data and processed dataset are available and saved in TextBox/dataset. The file structure of ./utils is as follow:
    
@@ -120,7 +120,7 @@ Run following command and the evaluation result will be shown in ./TextBox/textb
 ```
 python run_textbox.py --model=MVP --dataset=<dataset_name> --model_path=<fine-tuned_model_folder_path>
 ```
-
+### Installation Procedures for the Back-end:
 #### structure of the utils folder
 ```
 ├── app.py
@@ -130,7 +130,6 @@ python run_textbox.py --model=MVP --dataset=<dataset_name> --model_path=<fine-tu
 ├── run_tuned_model.py
 └── TextBox
 ```
-
 
 #### Requirements
     TextBox (https://github.com/RUCAIBox/TextBox)
@@ -152,8 +151,27 @@ python run_textbox.py --model=MVP --dataset=<dataset_name> --model_path=<fine-tu
 `python app.py` The backend would run on port 5000.
 `python run_tuned_model.py` Run this file to test your environment without flask
 
+### Installation for the Front-end 
+#### Requirements
+    Node.js >= 16.0 for Vue3
 
-#### Package and Code Citations:
+    "axios": "^1.4.0",
+    "element-plus": "^2.3.7",
+    "vue": "^3.2.8",
+    "vue-axios": "^3.5.2",
+    "vue-clipboard3": "^2.0.0"
+    * For more details please check ./package.json
+
+#### Installation
+    1. Install Node.js (https://nodejs.org/en)
+    2. Open cmd at Frontend folder, run "npm install"
+    3. Edit ./vite.config.js, set target url to the real url of your backend
+
+#### Run
+    npm run dev
+
+
+### Package and Code Citations:
 
 1 TextBox: https://github.com/RUCAIBox/TextBox
 
@@ -199,23 +217,14 @@ python run_textbox.py --model=MVP --dataset=<dataset_name> --model_path=<fine-tu
 
 3. SpaCy: https://github.com/explosion/spaCy and https://spacy.io/
 
+4. Framework: Vue3 (https://cn.vuejs.org/guide/quick-start.html)
+
+5. UI library: Element-plus (https://element-plus.org/zh-CN/)
+
+6. Http request: Axios (https://www.npmjs.com/package/vue-axios)
 
 
 
-## System design details:
-### 1. Backend -- Python
-#### 1.1 Main approaches
-Flask + json
-
-Simple example in example folder.
-
-#### 1.2 PDF Generation (Planning)
-The original STR file is in Acrobat format, which is a 
-closed source file format developed by Adobe. This means
-it is nearly impossible to automatically edit the file.
-
-### 2. Frontend -- Vue.js
-    Framework: Vue3 (https://cn.vuejs.org/guide/quick-start.html)
-    UI library: Element-plus (https://element-plus.org/zh-CN/)
-    Http request: Axios (https://www.npmjs.com/package/vue-axios)
+    
+    
 
