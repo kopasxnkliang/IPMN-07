@@ -1,6 +1,6 @@
 # IPMN-07
 
-！[Alt text](/figures/datacollections.png)
+![image](public/figures/datacollections.png)
 
 
 ### Installation Procedures for Fine-tuning and Evaluation
