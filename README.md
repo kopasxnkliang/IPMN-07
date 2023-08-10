@@ -10,12 +10,23 @@ To fine-tune a data-to-text generation model for generating descriptive sentence
 <img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/Proposal2.0.png" alt="alt text" width="600" height="480">
 
 #### STR data collection and preparation
-<img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/datacollections.png" alt="alt text" width="600" height="480">
+<img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/datacollections.png" alt="alt text" width="480" height="400">
 
 #### Train Loss
-<img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/train_loss.png" alt="alt text" width="600" height="480">
+<img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/train_loss.png" alt="alt text">
 
-### 
+#### Generation Score
+<img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/generation_score.png" alt="alt text">
+
+#### Before and After Fine-tuning
+<img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/comparison_results.png" alt="alt text">
+
+#### Parameters Tuning
+<img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/parameter_tuning.png" alt="alt text">
+
+#### Compariosn Results
+<img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/comparison_result_1.png" alt="alt text">
+<img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/comparison_result_4.png" alt="alt text">
 
 ### Installation Procedures for Fine-tuning and Evaluation
 
