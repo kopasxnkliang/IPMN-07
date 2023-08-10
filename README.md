@@ -9,11 +9,13 @@ To fine-tune a data-to-text generation model for generating descriptive sentence
 #### Basic Project Framwork
 <img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/Proposal2.0.png" alt="alt text" width="600" height="480">
 
-
 #### STR data collection and preparation
-![image](/figures/datacollections.png)
+<img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/datacollections.png" alt="alt text" width="600" height="480">
 
+#### Train Loss
+<img src="https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/train_loss.png" alt="alt text" width="600" height="480">
 
+### 
 
 ### Installation Procedures for Fine-tuning and Evaluation
 
