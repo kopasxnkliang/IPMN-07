@@ -1,5 +1,8 @@
 # IPMN-07
 
+！[Alt text](/figures/datacollections.png)
+
+
 ### Installation Procedures for Fine-tuning and Evaluation
 
 1. Download the code folders (utils and TextBox) from the Google Drive link listed in our project report. Our raw data and processed dataset are available and saved in TextBox/dataset. The file structure of ./utils is as follow:
