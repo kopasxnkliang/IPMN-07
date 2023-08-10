@@ -7,7 +7,8 @@ To fine-tune a data-to-text generation model for generating descriptive sentence
 3. Report with detailed analyis
 
 #### Basic Project Framwork
-![image](/figures/Proposal2.0.png =250x250)
+![](https://github.com/kopasxnkliang/IPMN-07/blob/main/figures/Proposal2.0.png =250x250)
+
 
 #### STR data collection and preparation
 ![image](/figures/datacollections.png)
