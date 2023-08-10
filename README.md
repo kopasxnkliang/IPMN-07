@@ -6,10 +6,10 @@ To fine-tune a data-to-text generation model for generating descriptive sentence
 2. Fine-tune a data-to-text-generation model (fine-tuning, parameter-tuning, quantitave & qualitative evaluation)
 3. Report with detailed analyis
 
-Basic Project Framwork
+#### Basic Project Framwork
 ![image](/figures/Proposal2.0.png)
 
-STR data collection and preparation
+#### STR data collection and preparation
 ![image](/figures/datacollections.png)
 
 
