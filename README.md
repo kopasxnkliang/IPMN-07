@@ -1,6 +1,17 @@
 # IPMN-07
 
+### Our Project
+To fine-tune a data-to-text generation model for generating descriptive sentences from input keywords in order to help investigators to prepare STR reports.
+1. Prepare the STR dataset (data collection, filtering, label generating and EDA)
+2. Fine-tune a data-to-text-generation model (fine-tuning, parameter-tuning, quantitave & qualitative evaluation)
+3. Report with detailed analyis
+
+Basic Project Framwork
+![image](/figures/Proposal2.0.png)
+
+STR data collection and preparation
 ![image](/figures/datacollections.png)
+
 
 
 ### Installation Procedures for Fine-tuning and Evaluation
